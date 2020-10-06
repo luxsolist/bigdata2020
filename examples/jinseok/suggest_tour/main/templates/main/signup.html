@@ -1,0 +1,105 @@
+<html lang="en">
+{% load static %}
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>::: PACKEASY - SIGNUP :::</title>
+  <link rel="stylesheet" href="{% static 'main/assets/css/signup.css' %}">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>  
+</head>
+<body class='main-bg'>
+  <div class="signup-container text-c animated fadeIn">
+    <h2>회원가입</h2>
+    <p>회원이 아니신가요? PACKEASY와 함께 해요!</p>
+    <hr>
+    <form method="post" class="margin-t">
+      {% csrf_token %}
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text">
+            <i class="fa fa-user-circle-o" aria-hidden="true"></i>
+          </span>
+        </div>
+        <input type="text" class="form-control" id="user_id" placeholder="아이디">
+        <div class="chk_id">중복 검사</div>
+      </div>
+      <div class="chk_res">
+        <br>
+      </div>
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text">
+            <i class="fa fa-key" aria-hidden="true"></i>
+          </span>
+        </div>            
+        <input type="password" class="form-control" id="user_pw" placeholder="비밀번호">
+      </div>
+      <br>
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text">
+            <i class="fa fa-key" aria-hidden="true"></i>
+          </span>
+        </div>            
+        <input type="password" class="form-control" id="user_pw_chk" placeholder="비밀번호 확인">
+      </div>
+      <div class="pw_chk">
+        <br>
+      </div>
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text">
+            <i class="fa fa-envelope" aria-hidden="true"></i>
+          </span>
+        </div>            
+        <input type="text" class="form-control" id="user_name" placeholder="이름">
+      </div>
+      <br>     
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text">
+            <i class="fa fa-envelope" aria-hidden="true"></i>
+          </span>
+        </div>            
+        <input type="text" class="form-control" id="email" placeholder="이메일 주소">
+      </div>
+      <br>      
+    </form>
+  </div>
+
+<script>
+  $(".chk_id").click(function() {
+    if ($('[id = user_id]').val() == '') {
+      alert("아이디를 입력해주세요.")
+    }
+    else {
+      $.ajax({
+        type: 'POST',
+        url: '/chk_id/',
+        headers: {
+          'X-CSRFToken': $('[name=csrfmiddlewaretoken]').val(),
+        },
+        data: {
+          'user_id': $('[id = user_id]').val(),
+        },
+        success : function(res) {
+          if (res.success == 'True') {
+            $(".chk_res").html("사용가능한 계정입니다.")
+            $(".chk_res").css("color", "green")
+          }
+          else {
+            $(".chk_res").html("계정이 이미 존재합니다.")
+            $(".chk_res").css("color", "red")
+          }
+        }
+      })
+    }
+  })
+</script>
+</body>
+</html>

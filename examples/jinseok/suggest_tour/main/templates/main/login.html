@@ -1,0 +1,82 @@
+<html lang="en">
+{% load static %}
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>:::: PACKEASY ::::</title> 
+  <link rel="stylesheet" href="{% static 'main/assets/css/login.css' %}">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+</head>
+<body class='main-bg'>
+
+  <div class="login-container text-c animated FadeIn">
+    <div>
+      <h1 class="logo-badge text-whitesmoke">
+        <span class="fa fa-user-circle"></span>
+      </h1>
+    </div>
+    <div>
+      <h1 class="text-whitesmoke">PACKEASY</h1>
+      <p class="text-whitesmoke">여행을 보다 편리하게</p>
+      <br>
+      <form action="submit" method="POST" class="margin-t">
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text">
+              <i class="fa fa-user-circle-o" aria-hidden="true"></i>
+            </span>
+          </div>
+          <input type="text" class="form-control" id="user_id" placeholder="Username" required>
+        </div>
+        <br>
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text">
+              <i class="fa fa-key" aria-hidden="true"></i>
+            </span>
+          </div>          
+          <input type="password" class="form-control" id="user_pw" placeholder="******" required>
+        </div>
+        <br>
+        <button type="submit" class="form-button button-l margin-b">로그인</button>
+
+        <a href="#" class="text-darkyellow find_pw">비밀번호 찾기</a>
+        <p class="text-whitesmoke text-center">회원이 아니신가요?</p>
+        <a href="signup/" class="text-darkyellow">회원가입</a>
+
+      </form>
+    </div>
+  </div>
+
+<script>
+  $('[type="submit"]').click(function() {
+    $.ajax({
+      type: 'POST',
+      url: '/login_chk/',
+      data: {
+        'user_id':$('[id = user_id]').val(),
+        'user_pw':$('[id = user_pw]').val(),
+      },
+      success : function(res) {
+        if (res == 200) {
+          location.href = '/list'
+        }
+        else {
+          alert("아이디 혹은 비밀번호를 확인해주세요")
+        }
+      }
+    })
+  })
+
+  $(".find_pw").click(function() {
+    alert("준비중입니다.")
+  })
+
+</script>
+</body>
+</html>
