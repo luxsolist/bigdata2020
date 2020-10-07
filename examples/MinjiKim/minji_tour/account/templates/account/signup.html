@@ -1,0 +1,94 @@
+<html>
+<head>
+    <title>Sign up</title>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+</head>
+
+<body>
+    <div class="content container">
+        <header class="page-header">
+            <h1>Sign up</h1>
+        </header>
+        <div class="row">
+            <div class="col-md-16">
+                <form method="POST" class=''>
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="username">아이디</label>
+                        <input type="text" name="username" class="form-control" id="username" placeholder="Username">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">비밀번호</label>
+                        <input type="text" name="password" class="form-control" id="password" placeholder="Password">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">성별</label>
+                        <label class="radio-inline"><input type="radio" name="gender" value="M" checked>남</label>
+                        <label class="radio-inline"><input type="radio" name="gender" value="F">여</label>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="age">나이</label>
+                        <input type="text" name="age" class="form-control" id="age" placeholder="Age">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="address">주소</label>
+                        <input type="text" name="address" class="form-control" id="address" placeholder="Adress">
+                    </div>
+
+                    <div class ="form-group">
+                        <label for="like">좋아하는 여행지</label>
+                        <select class="form-control">
+                            <option value = "0">여행지 선택</option>
+                            {% for item in tourlist %}
+                            <option id = 'like1' name = 'like1' value = "{{item.contentid}}">{{item.title}}</option>
+                            {% endfor %}
+                        </select>
+                        <select class="form-control">
+                            <option value = "0">여행지 선택</option>
+                            {% for item in tourlist %}
+                            <option id = 'like2' name = 'like2' value = "{{item.contentid}}">{{item.title}}</option>
+                            {% endfor %}
+                        </select>
+                        <select class="form-control">
+                            <option value = "0">여행지 선택</option>
+                            {% for item in tourlist %}
+                            <option like = 'like3' name = 'like3' value = "{{item.contentid}}">{{item.title}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <button id = "signup_btn" type="submit" class="btn btn-default">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+
+<script src = "http://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script>
+      $('[id = signup_btn]').click(() => {
+      $.ajax({  
+          type : 'post',
+          url : '/signup_function/',
+          data : {
+            'signup_nick' : $('[id = signup_nick]').val(),
+            'signup_name' : $('[id = signup_name]').val(),                 
+            'signup_email' : $('[id = signup_email]').val(),
+            'signup_id' : $('[id = signup_id]').val(),
+            'signup_pw' : $('[id = signup_pw]').val(),
+            'csrfmiddlewaretoken' : $("[name = csrfmiddlewaretoken]").val()
+          },
+          success: function(res){
+              if (res == 0) {alert("회원가입이 완료되었습니다.\n아이디는 {{ request.session.user.name }}, 이메일은 {{ request.session.user.email}}");
+                 location.href = "/"}
+              else if (res == 1) {alert("ID랑 email을 확인해주세요")}
+          },
+        });
+      } )
+    </script>
