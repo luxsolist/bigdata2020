@@ -1,0 +1,8 @@
+
+<select class="custom-select" style="width:150px">
+
+    <option value = "0">날씨 선택</option>
+    {% for item in tourlist %}
+    <option value = "{{item.contentid}}">{{item.title}}</option>
+    {% endfor %}
+</select>
