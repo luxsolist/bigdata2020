@@ -16,7 +16,12 @@ def index(request):
 
 # 상세페이지뷰
 def detail(request):
-    if 'id' in request.GET:
-        item = get_object_or_404(TourInfo, pk=request.GET.get('id'))
+    if 'contentid' in request.GET:
+        item = get_object_or_404(TourInfo, contentid=request.GET.get('contentid'))
         return render(request, 'tour/detail.html', {'item': item})
     return HttpResponseRedirect('/tour/index/')
+
+def test(request):
+    content = {'tourlist':TourInfo.objects.all() }
+
+    return render(request,'tour/test.html',content)
