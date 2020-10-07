@@ -1,23 +1,23 @@
-#사용법
+# 사용법
 ===========
-###1. 사전 설정
+### 1. 사전 설정
 ```console
 python manage.py makemigration
 python manage.py migrate
 ```  
-#####1-1. superuser 설정  
+##### 1-1. superuser 설정  
 ```console
 python manage.py createsuperuser
 ```  
 -----------
-###2. db input
+### 2. db input
 
-#####2-1. manage.py가 있는 위치에서 다음 명령어 실행  
+##### 2-1. manage.py가 있는 위치에서 다음 명령어 실행  
 ```console
 python manage.py shell
 ```
 
-#####2-2. 다음 명령어를 복사 붙여넣기 하여 csv 파일 db에 삽입  
+##### 2-2. 다음 명령어를 복사 붙여넣기 하여 csv 파일 db에 삽입  
 ```python
 import csv
 from tour.models import TourInfo
@@ -49,7 +49,7 @@ for row in rdr:
    )
 ```
 -----------
-###3. 서버 구동  
+### 3. 서버 구동  
 ```console
 python manage.py runserver
 ```
