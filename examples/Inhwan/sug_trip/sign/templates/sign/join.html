@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <div class="modal fade" id="joinModal" role="dialog">
+        <div class="modal-dialog">
+          <!-- Modal content-->
+          <div class="modal-content col-sm-8 col-sm-offset-2">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">회원가입</h4>
+            </div>           
+            <form action="{% url 'sign:join_post' %}" method="post">  
+                <div class="modal-body">
+                        {% csrf_token %}                  
+                        <label for="user_id">아이디</label>
+                        <input type="text" class="form-control" name="user_id"><br>
+                        <label for="user_pw">비밀번호</label>
+                        <input type="password" class="form-control" name="user_pw"><br>
+                        <label for="user_pw2">비밀번호 재확인</label>
+                        <input type="password" class="form-control" name="user_pw2"><br>
+                        <label for="user_email">이메일</label>
+                        <input type="email" class="form-control" name="user_email"><br>
+                        <label for="user_dog">반려견명</label>
+                        <input type="text" class="form-control" name="user_dog"><br>
+                </div>
+                <div class="modal-footer">
+                    <input type="submit" class="btn btn-success" value="가입하기">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    </body>
+    </html>

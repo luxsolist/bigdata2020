@@ -20,6 +20,7 @@
         <span class="fa fa-user-circle"></span>
       </h1>
     </div>
+
     <div class='margin-t'>
       <h1 class="text-whitesmoke">PACKEASY</h1>
       <p class="text-whitesmoke">여행을 보다 편리하게</p>
@@ -51,6 +52,7 @@
       <a href="signup/" class="text-darkyellow">회원가입</a>
 
       <!-- </form> -->
+
     </div>
   </div>
 
@@ -59,16 +61,20 @@
     $.ajax({
       type: 'POST',
       url: '/login_chk/',
+
       headers: {
         'X-CSRFToken': $('[name=csrfmiddlewaretoken]').val(),
       },
+
       data: {
         'user_id':$('[id = user_id]').val(),
         'user_pw':$('[id = user_pw]').val(),
       },
       success : function(res) {
+
         if (res.success == 'True') {
           location.href = 'tour/'
+
         }
         else {
           alert("아이디 혹은 비밀번호를 확인해주세요")
