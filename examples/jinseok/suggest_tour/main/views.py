@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from .models import Accounts
 from django.http import JsonResponse
+from django.contrib import messages
 # Create your views here.
 
 def main(request):
@@ -27,6 +28,7 @@ def signup_chk(request):
       address = address,
     )
     account.save()
+    messages.info(request, "Account Created Successfully")
     return render(request, 'main/login.html')
 
 def login_chk(request):
@@ -37,7 +39,7 @@ def login_chk(request):
       if user_pw == Accounts.objects.get(user_id=user_id).user_pw :
         user_name = Accounts.objects.get(user_id=user_id).user_name
         save_session(request, user_name)
-        return JsonResponse({"success": True}, status = 200)
+        return JsonResponse({"success": "True"}, status = 200)
       else:
         return JsonResponse({"error": "Incorrect Password"}, status = 401)
     else:

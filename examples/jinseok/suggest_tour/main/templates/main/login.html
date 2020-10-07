@@ -20,36 +20,39 @@
         <span class="fa fa-user-circle"></span>
       </h1>
     </div>
-    <div>
+
+    <div class='margin-t'>
       <h1 class="text-whitesmoke">PACKEASY</h1>
       <p class="text-whitesmoke">여행을 보다 편리하게</p>
       <br>
-      <form action="submit" method="POST" class="margin-t">
-        <div class="input-group">
-          <div class="input-group-prepend">
-            <span class="input-group-text">
-              <i class="fa fa-user-circle-o" aria-hidden="true"></i>
-            </span>
-          </div>
-          <input type="text" class="form-control" id="user_id" placeholder="Username" required>
+      <!-- <form action="submit" method="POST" class="margin-t"> -->
+      {% csrf_token %}
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text">
+            <i class="fa fa-user-circle-o" aria-hidden="true"></i>
+          </span>
         </div>
-        <br>
-        <div class="input-group">
-          <div class="input-group-prepend">
-            <span class="input-group-text">
-              <i class="fa fa-key" aria-hidden="true"></i>
-            </span>
-          </div>          
-          <input type="password" class="form-control" id="user_pw" placeholder="******" required>
-        </div>
-        <br>
-        <button type="submit" class="form-button button-l margin-b">로그인</button>
+        <input type="text" class="form-control" id="user_id" placeholder="Username" required>
+      </div>
+      <br>
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text">
+            <i class="fa fa-key" aria-hidden="true"></i>
+          </span>
+        </div>          
+        <input type="password" class="form-control" id="user_pw" placeholder="******" required>
+      </div>
+      <br>
+      <button type="submit" class="form-button button-l margin-b">로그인</button>
 
-        <a href="#" class="text-darkyellow find_pw">비밀번호 찾기</a>
-        <p class="text-whitesmoke text-center">회원이 아니신가요?</p>
-        <a href="signup/" class="text-darkyellow">회원가입</a>
+      <a href="#" class="text-darkyellow find_pw">비밀번호 찾기</a>
+      <p class="text-whitesmoke text-center">회원이 아니신가요?</p>
+      <a href="signup/" class="text-darkyellow">회원가입</a>
 
-      </form>
+      <!-- </form> -->
+
     </div>
   </div>
 
@@ -58,13 +61,20 @@
     $.ajax({
       type: 'POST',
       url: '/login_chk/',
+
+      headers: {
+        'X-CSRFToken': $('[name=csrfmiddlewaretoken]').val(),
+      },
+
       data: {
         'user_id':$('[id = user_id]').val(),
         'user_pw':$('[id = user_pw]').val(),
       },
       success : function(res) {
-        if (res == 200) {
-          location.href = '/list'
+
+        if (res.success == 'True') {
+          location.href = 'tour/'
+
         }
         else {
           alert("아이디 혹은 비밀번호를 확인해주세요")
