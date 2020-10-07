@@ -11,25 +11,23 @@ def signup(request):
 
 def signup_chk(request):
   if request.method == 'POST':
-    user_id = request.POST['user_id']
-    user_pw = request.POST['user_pw']
-    user_name = request.POST['user_name']
-    gender = request.POST['gender']
-    email = request.POST['email']
-    address = request.POST['address']
+    user_id = request.POST.get("user_id")
+    user_pw = request.POST.get("user_pw")
+    user_name = request.POST.get("user_name")
+    gender = request.POST.get("gender")
+    email = request.POST.get("email")
+    address = request.POST.get("address")
 
-    if Accounts.objects.filter(user_id = user_id).exists():
-      return JsonResponse({"error": "User already exists"}, status = 401)
-    else:
-      account = Accounts(
-        user_id = user_id,
-        user_pw = user_pw,
-        user_name = user_name,
-        gender = gender,
-        email = email,
-        address = address,
-      )
-      account.save()
+    account = Accounts(
+      user_id = user_id,
+      user_pw = user_pw,
+      user_name = user_name,
+      gender = gender,
+      email = email,
+      address = address,
+    )
+    account.save()
+    return render(request, 'main/login.html')
 
 def login_chk(request):
   if request.method == "POST":
@@ -51,7 +49,7 @@ def save_session(request, user_name):
 def chk_id(request):
   if request.method == "POST":
     user_id = request.POST.get("user_id")
-      if Accounts.objects.filter(user_id=user_id).exists():
-        return JsonResponse({"success": "False"}, status = 200)
-      else:
-        return JsonResponse({"success": 'True'}, status = 200)
+    if Accounts.objects.filter(user_id=user_id).exists():
+      return JsonResponse({"success": "False"}, status = 200)
+    else:
+      return JsonResponse({"success": 'True'}, status = 200)

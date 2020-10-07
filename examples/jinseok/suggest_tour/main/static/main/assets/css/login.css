@@ -204,3 +204,7 @@ body {
   letter-spacing: -10px;
   margin-bottom: 0;
 }
+
+.error {
+  border: 3px solid red;
+}
