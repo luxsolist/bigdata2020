@@ -47,7 +47,7 @@ def find_max(count1,count2,count3,count4):
     return result
 
 def get_congestion(lat,lng,idx):
-    url = "https://apis.openapi.sk.com/tmap/traffic?version=1&centerLat="+lat+"&centerLon="+lng+"&reqCoordType=WGS84GEO&resCoordType=WGS84GEO&trafficType=AUTO&radius=9&zoomLevel=17&callback=function&appKey=l7xx15dc34d100d94bbeb85d6717a8fa5feb"
+    url = "https://apis.openapi.sk.com/tmap/traffic?version=1&centerLat="+lat+"&centerLon="+lng+"&reqCoordType=WGS84GEO&resCoordType=WGS84GEO&trafficType=AUTO&radius=9&zoomLevel=17&callback=function&appKey=발급key"
     responseBody = urlopen(url).read().decode('utf-8')
     jsonArray = json.loads(responseBody)
     
