@@ -9,7 +9,8 @@ now = datetime.datetime.now()
 
 ## x, y 좌표가 포함된 관광지 정보를 데이터프레임으로
 ## 4000개 선택한 관광지정보 csv 파일을 불러와야함
-df = pd.read_csv('C:/rsource2/a1.csv',names=['arr1','areacode','cat1','cat2','cat3','contentid','contenttypeid','createtime','firstimage','firstimage2','mapx','mapy','mlevel','modifiedtime','readcount','sigungucode','title','zipcode'])
+df = pd.read_csv('C:/rsource2/a1.csv',names=
+['tour_id','title','cat1','cat2','cat3','areacode','addr1','tel','mapx','mapy','firstimage','firstimage2','contentid','contenttypeid','readcount','sigungucode','zipcode'])
 df1 = df.loc[:,['title','contentid','mapy','mapx']] 
 
 df1['road_total']=0
