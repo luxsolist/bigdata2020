@@ -1,25 +1,26 @@
 from django.db import models
 
-class TourInfo(models.Model):
-    addr1 = models.CharField(max_length=400)
-    areacode = models.CharField(max_length=255)
-    cat1 = models.CharField(max_length=255)
-    cat2 = models.CharField(max_length=255)
-    cat3 = models.CharField(max_length=255)
-    contentid = models.IntegerField() #pk로 할까 생각중
-    contenttypeid =models.IntegerField()
-    createdtime = models.IntegerField()
+class TOURLIST_SITE(models.Model):
+    tour_id = models.IntegerField(primary_key=True, blank=False)
+    title = models.CharField(max_length=255, blank=False)
+    cat1 = models.CharField(max_length=3, blank=False)
+    cat2 = models.CharField(max_length=5, blank=False)
+    cat3 = models.CharField(max_length=9, blank=False)
+    areacode = models.IntegerField(default=0)
+    addr1 = models.CharField(max_length=255)
+    tel = models.CharField(max_length=31)
+    mapx = models.FloatField(default=0.0, blank=False)
+    mapy = models.FloatField(default=0.0, blank=False)
     firstimage = models.CharField(max_length=255)
     firstimage2 = models.CharField(max_length=255)
-    mapx = models.CharField(max_length=255)
-    mapy = models.CharField(max_length=255)
-    mlevel = models.IntegerField()
-    modifiedtime = models.IntegerField()
-    readcount = models.IntegerField()
-    sigungucode = models.IntegerField()
-    title = models.CharField(max_length=255)
-    zipcode = models.CharField(max_length=255)
+    contentid = models.IntegerField(blank=False)
+    contenttypeid = models.IntegerField(blank=False)
+    readcount = models.IntegerField(default=0)
+    sigungucode = models.IntegerField(default=0)
+    zipcode = models.IntegerField(default=0)
 
     def __str__(self):
         return self.title
 
+# class TOURLIST_TRAFFIC(models.Model):
+#     tour_id = models.ForeignKey

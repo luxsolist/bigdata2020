@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Accounts
+from .models import TOURLIST_USER
 from django.http import JsonResponse
 from django.contrib import messages
 # Create your views here.
@@ -19,7 +19,7 @@ def signup_chk(request):
     email = request.POST.get("email")
     address = request.POST.get("address")
 
-    account = Accounts(
+    account = TOURLIST_USER(
       user_id = user_id,
       user_pw = user_pw,
       user_name = user_name,
@@ -29,15 +29,15 @@ def signup_chk(request):
     )
     account.save()
     messages.info(request, "Account Created Successfully")
-    return render(request, 'main/login.html')
+    return JsonResponse({"success": "True"}, status = 200)
 
 def login_chk(request):
   if request.method == "POST":
     user_id = request.POST['user_id']
     user_pw = request.POST['user_pw']
-    if Accounts.objects.filter(user_id=user_id).exists():
-      if user_pw == Accounts.objects.get(user_id=user_id).user_pw :
-        user_name = Accounts.objects.get(user_id=user_id).user_name
+    if TOURLIST_USER.objects.filter(user_id=user_id).exists():
+      if user_pw == TOURLIST_USER.objects.get(user_id=user_id).user_pw :
+        user_name = TOURLIST_USER.objects.get(user_id=user_id).user_name
         save_session(request, user_name)
         return JsonResponse({"success": "True"}, status = 200)
       else:
@@ -51,7 +51,7 @@ def save_session(request, user_name):
 def chk_id(request):
   if request.method == "POST":
     user_id = request.POST.get("user_id")
-    if Accounts.objects.filter(user_id=user_id).exists():
+    if TOURLIST_USER.objects.filter(user_id=user_id).exists():
       return JsonResponse({"success": "False"}, status = 200)
     else:
       return JsonResponse({"success": 'True'}, status = 200)

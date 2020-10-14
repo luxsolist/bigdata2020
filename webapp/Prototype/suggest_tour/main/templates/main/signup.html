@@ -17,7 +17,7 @@
     <h2>회원가입</h2>
     <p>회원이 아니신가요? PACKEASY와 함께 해요!</p>
     <hr>
-    <form method="post" class="margin-t" action="/signup_chk/">
+    <!-- <form method="post" class="margin-t" action="/signup_chk/"> -->
       {% csrf_token %}
       <div class="input-group">
         <div class="input-group-prepend">
@@ -90,7 +90,7 @@
       </div>
       <br>
       <button type="submit" class="form-button button-l margin-b">회원 가입</button>
-    </form>
+    <!-- </form> -->
   </div>
 
 <script>
@@ -113,6 +113,7 @@
             $(".chk_res").html("사용가능한 계정입니다.")
             $(".chk_res").css("color", "green")
             $(".form-button").removeAttr("disabled")
+            $(".user_id").attr("chk", "True")
           }
           else {
             $(".chk_res").html("계정이 이미 존재합니다.")
@@ -137,29 +138,41 @@
     }
   })
 
-  // $("form").on("submit", function(e) {
-  //   $.ajax({
-  //     type: 'POST',
-  //     url: '/signup_chk/',
-  //     data: {
-  //       'user_id': $('[id = user_id]').val(),
-  //       'user_pw': $('[id = user_pw]').val(),
-  //       'user_name': $('[id = user_name]').val(),
-  //       'gender': $('[id = gender]').val(),
-  //       'email': $('[id = email]').val(),
-  //       'address': $('[id = address]').val(),
-  //     },
-  //     success: function(res) {
-  //       if (res.success == 'True') {
-  //         alert("PACKEASY의 회원이 되신 것을 환영합니다!")
-  //         location.href = '/'
-  //       }
-  //       else {
-  //         alert("가입이 정상적으로 이루어지지 않았습니다.")
-  //       }
-  //     }
-  //   })
-  // })
+  $("form").on("submit", function(e) {
+    if ($(".chk").val() != "True") {
+      alert("계정 중복 검사를 진행해주세요.")
+      return
+    }
+
+    if ($(".user_pw").val() != $(".user_pw_chk").val()) {
+      alert("비밀번호가 올바르지 않습니다.")
+      return
+    }
+    $.ajax({
+      type: 'POST',
+      url: '/signup_chk/',
+      headers: {
+        'X-CSRFToken': $('[name=csrfmiddlewaretoken]').val(),
+      },
+      data: {
+        'user_id': $('[id = user_id]').val(),
+        'user_pw': $('[id = user_pw]').val(),
+        'user_name': $('[id = user_name]').val(),
+        'gender': $('[id = gender]').val(),
+        'email': $('[id = email]').val(),
+        'address': $('[id = address]').val(),
+      },
+      success: function(res) {
+        if (res.success == 'True') {
+          alert("PACKEASY의 회원이 되신 것을 환영합니다!")
+          location.href = '/'
+        }
+        else {
+          alert("가입이 정상적으로 이루어지지 않았습니다.")
+        }
+      }
+    })
+  })
 
 
   // let checker = user_pw_chk.addEventListener('change',(e) => {
