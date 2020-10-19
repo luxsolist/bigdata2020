@@ -2,7 +2,7 @@
 ===========
 ### 1. 사전 설정
 ```console
-python manage.py makemigration
+python manage.py makemigrations
 python manage.py migrate
 ```  
 ##### 1-1. superuser 설정  
