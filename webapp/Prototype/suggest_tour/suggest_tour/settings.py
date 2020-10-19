@@ -11,10 +11,10 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
-import pymysql
+# import pymysql
 
-pymysql.version_info = (1, 4, 0, "final", 0)
-pymysql.install_as_MySQLdb()
+# pymysql.version_info = (1, 4, 0, "final", 0)
+# pymysql.install_as_MySQLdb()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -85,10 +85,10 @@ DATABASES = {
         # 'NAME': BASE_DIR / 'db.sqlite3',
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'TourList',
-        'USER': 'admin',
-        'PASSWORD': '1234',
+        'USER': 'root',         # 설치 당시 본인이 생성한 USER. default는 root
+        'PASSWORD': 'admin1234',     # 설치 당시 설정한 비밀번호.
         'HOST': 'localhost',
-        'PORT': '',
+        'PORT': '3306',
     }
 }
 
