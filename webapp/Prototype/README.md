@@ -1,55 +1,39 @@
 # 사용법
-===========
-### 1. 사전 설정
+---
+### 1. mysqlclient 설치
 ```console
-python manage.py makemigrations
+pip install mysqlclient
+```
+
+### 2. DB 생성 및 csv파일 데이터 넣기
+- C:\bigdata2020\webapp\Prototype\쿼리문.sql 사용
+- tour_id 0번 삭제 (마리아DB에서 임의로 들어가서 삭제필요)
+- tour_data중 10개의 데이터가 제대로 입력되지않아 수기입력 필요 (tour_except.csv)
+
+### 3. ./suggest_tour/settings.py 변경
+```console
+DATABASES = {
+    'default': {
+        # 'ENGINE': 'django.db.backends.sqlite3',
+        # 'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'TourList',
+        'USER': 'root',         # 설치 당시 본인이 생성한 USER. default는 root
+        'PASSWORD': 'admin1234',     # 설치 당시 설정한 비밀번호.
+        'HOST': 'localhost',
+        'PORT': '3306',
+    }
+}
+```
+
+##### 3-1. superuser 설정
+```console
 python manage.py migrate
-```  
-##### 1-1. superuser 설정  
-```console
 python manage.py createsuperuser
 ```  
------------
-### 2. db input
 
-##### 2-1. manage.py가 있는 위치에서 다음 명령어 실행  
-```console
-python manage.py shell
-```
-
-##### 2-2. 다음 명령어를 복사 붙여넣기 하여 csv 파일 db에 삽입  
-```python
-import csv
-from tour.models import TourInfo
-
-f = open('a1.csv','r',encoding = 'utf-8')
-rdr = csv.reader(f)
-
-for row in rdr:
-     print(row)
-     TourInfo.objects.create(
-              addr1 = row[0],
-              areacode = row[1],
-              cat1 = row[2],
-              cat2 = row[3],
-              cat3 = row[4],
-              contentid = row[5],
-              contenttypeid = row[6],
-              createdtime = row[7],
-              firstimage = row[8],
-              firstimage2 = row[9],
-              mapx = row[10],
-              mapy = row[11],
-              mlevel = row[12],
-              modifiedtime = row[13],
-              readcount = row[14],
-              sigungucode = row[15],
-              title = row[16],
-              zipcode = row[17],
-   )
-```
------------
-### 3. 서버 구동  
+### 4. 서버 구동하여 확인 
 ```console
 python manage.py runserver
 ```
+http://localhost:8000/tour/  에서 DB연동 확인가능 
