@@ -15,7 +15,7 @@ class TourlistUser(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'tourlist_user'
+        db_table = 'TOURLIST_USER'
       
     def __str__(self):
       return self.user_id + ' / ' + self.email

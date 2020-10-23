@@ -21,7 +21,7 @@ class TourlistSite(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'tourlist_site'
+        db_table = 'TOURLIST_SITE'
 
     def __str__(self):
         return self.title
@@ -40,7 +40,7 @@ class TourlistTraffic(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'tourlist_traffic'
+        db_table = 'TOURLIST_TRAFFIC'
         unique_together = (('tour', 'measured_at'),)
 
     def __str__(self):
