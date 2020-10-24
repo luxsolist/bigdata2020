@@ -36,8 +36,12 @@ def recommend():
 
   # 0~1 사이 값으로 scaling
   scaler = MinMaxScaler()
-  tour_tmap[["dist_scaled", "readcount_scaled", "conavg_scaled"]] = \
-    scaler.fit_transform(tour_tmap[["dist", "readcount", "congestion_avg"]])
+  #tour_tmap[["dist_scaled", "readcount_scaled", "conavg_scaled"]] = \
+  #  scaler.fit_transform(tour_tmap[["dist", "readcount", "congestion_avg"]])
+  tour_temp = pd.DataFrame(scaler.fit_transform(tour_tmap[["dist", "readcount", "congestion_avg"]]), columns=['dist','readcount', 'congestion_avg'])
+  tour_tmap["dist_scaled"] = tour_temp["dist"]
+  tour_tmap["readcount_scaled"] = tour_temp["readcount"]
+  tour_tmap["conavg_scaled"] = tour_temp["congestion_avg"]
 
   # weight 계산
   tour_tmap["dist_scaled"] = weight_dist * (1 - tour_tmap["dist_scaled"])
