@@ -4,6 +4,7 @@
 ```console
 pip install django
 pip install mysqlclient
+pip install haversine
 ```
 
 ### 2. DB 생성 및 csv파일 데이터 넣기
