@@ -1,3 +1,7 @@
+CREATE DATABASE Tourlist;
+
+USE Tourlist;
+
 CREATE TABLE TOURLIST_SITE(
 	tour_id INT NOT NULL,
 	title VARCHAR(255) NOT NULL,
