@@ -2,6 +2,7 @@
 ---
 ### 1. mysqlclient 설치
 ```console
+pip install django
 pip install mysqlclient
 ```
 
