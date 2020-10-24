@@ -84,9 +84,15 @@ DATABASES = {
         # 'ENGINE': 'django.db.backends.sqlite3',
         # 'NAME': BASE_DIR / 'db.sqlite3',
         'ENGINE': 'django.db.backends.mysql',
+<<<<<<< Updated upstream
         'NAME': 'Tourlist',
         'USER': 'admin',         # 설치 당시 본인이 생성한 USER. default는 root
         'PASSWORD': '1234',     # 설치 당시 설정한 비밀번호.
+=======
+        'NAME': 'TourList',
+        'USER': 'root',         # 설치 당시 본인이 생성한 USER. default는 root
+        'PASSWORD': '12345678',     # 설치 당시 설정한 비밀번호.
+>>>>>>> Stashed changes
         'HOST': 'localhost',
         'PORT': '3306',
     }
