@@ -4,7 +4,7 @@ from sqlalchemy import create_engine
 from haversine import haversine
 from sklearn.preprocessing import MinMaxScaler
 
-def recommend():
+def recommend(lat,lng):
   # sql 호출, 데이터 불러오기
   engine = create_engine("mysql://admin:1234@localhost:3306/Tourlist")
   tour_data = pd.read_sql("SELECT * FROM TOURLIST_SITE", engine)
@@ -29,17 +29,16 @@ def recommend():
   
   # 위치 초기 설정
   # 이 부분은 나중에 사용자 값 or 찾고싶은 지역의 위도/경도 값 집어넣게 코딩
-  cur_location = (37.3947464,127.1090181)
+  # cur_location = (37.3947464,127.1090181)
+  cur_location = (lat,lng)
 
   # gps 좌표로 거리(km) 계산
   tour_tmap["dist"] = tour_tmap.apply(lambda x: haversine(cur_location, (x['mapy'], x['mapx'])), axis=1)
 
   # 0~1 사이 값으로 scaling
   scaler = MinMaxScaler()
-  #tour_tmap[["dist_scaled", "readcount_scaled", "conavg_scaled"]] = \
-  #  scaler.fit_transform(tour_tmap[["dist", "readcount", "congestion_avg"]])
   tour_tmap[["dist_scaled", "readcount_scaled", "conavg_scaled"]] = \
-    pd.DataFrame(scaler.fit_transform(tour_tmap[["dist", "readcount", "congestion_avg"]]), columns=['dist','readcount', 'congestion_avg'])
+    scaler.fit_transform(tour_tmap[["dist", "readcount", "congestion_avg"]])
 
   # weight 계산
   tour_tmap["dist_scaled"] = weight_dist * (1 - tour_tmap["dist_scaled"])
