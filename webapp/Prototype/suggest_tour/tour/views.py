@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse,HttpResponseRedirect,JsonResponse
 from django.core.paginator import Paginator
+from django.template import loader, RequestContext
 from .models import TourlistSite
 from .recommender import recommend
 import json
@@ -8,12 +9,16 @@ import json
 
 # 메인뷰
 def index(request):
+# <<<<<<< jinseok_201021
+    mapx = request.session['gps_x']
+    mapy = request.session['gps_y']
 
-    # if request.is_ajax():
-        # lat = float(request.GET.get('Lat'))
-        # lng = float(request.GET.get('Lng'))
-      
-    df = recommend(37.3947464,127.1090181)
+    if request.POST:
+        mapx =  float(request.POST.get('lat'))
+        mapy =  float(request.POST.get('lng'))
+
+    df = recommend(mapx, mapy)
+
     df_to_json = df.reset_index().to_json(orient='records')
     tourlist = list(json.loads(df_to_json))
     page = request.GET.get('page') #파라미터로 넘어온 현재 페이지값
@@ -21,7 +26,10 @@ def index(request):
     items = paginator.get_page(page) # 해당페이지에 맞는 리스트로 필터링
     content = {'tourlist':items }
 
-    return render(request,'tour/index.html',content)
+    request.session['gps_x'] = mapx
+    request.session['gps_y'] = mapy
+
+    return render(request, 'tour/index.html', content)
 
 
 # 상세페이지뷰
@@ -35,11 +43,3 @@ def test(request):
     content = {'tourlist':TourlistSite.objects.all() }
 
     return render(request,'tour/test.html',content)
-
-def get_latlng(request):
-
-    lat = request.GET.get('Lat')
-    lng = request.GET.get('Lng')
-    print(lat,lng)
-    
-    return JsonResponse({'message':"위도: "+lat+" 경도: "+lng})

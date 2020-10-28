@@ -58,26 +58,31 @@
 
 <script>
   $('[type="submit"]').click(function() {
+    let loginID = $("#user_id").val()
+    let loginPW = $("#user_pw").val()
+    if (loginID == '' || loginPW == '') {
+      alert("아이디와 비밀번호를 입력해주세요.")
+    }
+
     $.ajax({
       type: 'POST',
       url: '/login_chk/',
-
       headers: {
         'X-CSRFToken': $('[name=csrfmiddlewaretoken]').val(),
       },
-
       data: {
         'user_id':$('[id = user_id]').val(),
         'user_pw':$('[id = user_pw]').val(),
       },
       success : function(res) {
-
         if (res.success == 'True') {
           location.href = 'tour/'
-
         }
-        else {
-          alert("아이디 혹은 비밀번호를 확인해주세요")
+        else if(res.success == "Incorrect Password"){
+          alert("비밀번호를 확인해주세요")
+        }
+        else if(res.success == "ID not found") {
+          alert("존재하지 않는 계정입니다.")
         }
       }
     })
@@ -86,6 +91,7 @@
   $(".find_pw").click(function() {
     alert("준비중입니다.")
   })
+  
 </script>
 </body>
 </html>
