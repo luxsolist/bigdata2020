@@ -18,6 +18,8 @@ def signup_chk(request):
     gender = request.POST.get("gender")
     email = request.POST.get("email")
     address = request.POST.get("address")
+    gps_x = request.POST.get("mapx")
+    gps_y = request.POST.get("mapy")
 
     account = TourlistUser(
       user_id = user_id,
@@ -26,6 +28,9 @@ def signup_chk(request):
       gender = gender,
       email = email,
       address = address,
+      gps_x= gps_x,
+      gps_y= gps_y,
+
     )
     account.save()
     messages.info(request, "Account Created Successfully")
@@ -38,15 +43,19 @@ def login_chk(request):
     if TourlistUser.objects.filter(user_id=user_id).exists():
       if user_pw == TourlistUser.objects.get(user_id=user_id).user_pw :
         user_name = TourlistUser.objects.get(user_id=user_id).user_name
-        save_session(request, user_name)
+        gps_x = TourlistUser.objects.get(user_id=user_id).gps_x
+        gps_y = TourlistUser.objects.get(user_id=user_id).gps_y
+        save_session(request, user_name, gps_x, gps_y)
         return JsonResponse({"success": "True"}, status = 200)
       else:
-        return JsonResponse({"error": "Incorrect Password"}, status = 401)
+        return JsonResponse({"success": "Incorrect Password"}, status = 200)
     else:
-      return JsonResponse({"error": "ID not found"}, status = 401)
+      return JsonResponse({"success": "ID not found"}, status = 200)
 
-def save_session(request, user_name):
+def save_session(request, user_name, gps_x, gps_y):
   request.session['user_name'] = user_name
+  request.session['gps_x'] = gps_x
+  request.session['gps_y'] = gps_y
 
 def chk_id(request):
   if request.method == "POST":

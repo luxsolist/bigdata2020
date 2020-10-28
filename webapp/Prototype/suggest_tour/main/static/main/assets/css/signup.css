@@ -139,7 +139,7 @@
 }
 .form-control::-webkit-input-placeholder { color: #BDBDBD; }
 
-.chk_id {
+.chk_id, .findPost {
   padding: 6px 12px;
   display: block;
   color: inherit;
@@ -148,7 +148,7 @@
   background-color: lightskyblue;
 }
 
-.chk_id:hover {
+.chk_id:hover, .findPost:hover {
   transition: all 0.3s ease-in-out;
   background-color: deepskyblue;
 }
@@ -185,10 +185,11 @@
   margin-top: 150px;
 }
 
-.chk_id:hover {
+.chk_id:hover, .findPost:hover {
   cursor: pointer;
 }
 
 .form-button:disabled {
   opacity: 0.3
 }
+

@@ -8,7 +8,9 @@ import json
 
 # 메인뷰
 def index(request):
-    df = recommend()
+    mapx = request.session["gps_x"]
+    mapy = request.session["gps_y"]
+    df = recommend(mapx, mapy)
     df_to_json = df.reset_index().to_json(orient='records')
     tourlist = list(json.loads(df_to_json))
     page = request.GET.get('page') #파라미터로 넘어온 현재 페이지값
