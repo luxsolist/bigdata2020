@@ -6,11 +6,12 @@
 <div class="container">
     <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
 <div class="container">
-    <div class='form-group'>
-        <input type="text" id="address" class="form-control" placeholder="주소">
-        <input type="button" class="btn btn-default" onclick="GetPostcode()" value="주소 검색"><br>
-        <input type="button" class="btn btn-primary" id="result" value="확인">
-    </div>
+        <div class='form-group'>
+            {% csrf_token %}
+            <input type="text" id="address" class="form-control" placeholder="주소">
+            <input type="button" class="btn btn-default" onclick="GetPostcode()" value="주소 검색"><br>
+            <input type="submit" class="btn btn-primary" id="result" value="확인">
+        </div>
     <div id="coordXY"></div>
     <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=f98f6adb5864070de89a0c8e21bf7951&libraries=services"></script>
@@ -41,17 +42,29 @@
         }).open();
     }
     $('#result').click(function(){
-          $.ajax({
-            url: '/get_latlng/',
-            type: 'get',
-            data: {
-                'Lat':lat,
-                'Lng':lng,
-            },
-            success: function(res) {
-                alert(res.message);
-            }
-          })
+        let form = $('<form action="/tour/" method="POST"></form>')
+        let long = $('<input name="lng" type="hidden"></input>')
+        let lati = $('<input name="lat" type="hidden"></input>')
+        let csrf = $('<input name="csrfmiddlewaretoken" type="hidden"></input>')
+        let csrf_val = $('[name = csrfmiddlewaretoken]').val()
+        long.val(lng)
+        lati.val(lat)
+        csrf.val(csrf_val)
+        form.append(long, lati, csrf)
+        $('.form-group').append(form)
+        form.submit()
+        
+        //   $.ajax({
+        //     url: '/get_latlng/',
+        //     type: 'get',
+        //     data: {
+        //         'Lat':lat,
+        //         'Lng':lng,
+        //     },
+        //     success: function(res) {
+        //         $('div').load(location.href + " div")
+        //     }
+        //   })
         })
 </script>
     {% for item in tourlist %}
