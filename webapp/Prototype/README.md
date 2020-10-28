@@ -2,7 +2,9 @@
 ---
 ### 1. mysqlclient 설치
 ```console
+pip install django
 pip install mysqlclient
+pip install haversine
 ```
 
 ### 2. DB 생성 및 csv파일 데이터 넣기
@@ -10,7 +12,8 @@ pip install mysqlclient
 - tour_id 0번 삭제 (마리아DB에서 임의로 들어가서 삭제필요)
 - tour_data중 10개의 데이터가 제대로 입력되지않아 수기입력 필요 (tour_except.csv)
 
-### 3. ./suggest_tour/settings.py 변경
+### 3. DB 접속 정보 변경
+./suggest_tour/settings.py 변경
 ```console
 DATABASES = {
     'default': {
@@ -24,6 +27,13 @@ DATABASES = {
         'PORT': '3306',
     }
 }
+```
+
+./tour/recommender.py 변경
+```console
+def recommend():
+  # sql 호출, 데이터 불러오기
+  engine = create_engine("mysql://root:admin1234@localhost:3306/Tourlist")
 ```
 
 ##### 3-1. superuser 설정
