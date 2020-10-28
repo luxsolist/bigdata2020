@@ -1,4 +1,4 @@
-CREATE DATABASE Tourlist;
+CREATE DATABASE Tourlist CHARACTER SET UTF8;
 
 USE Tourlist;
 
@@ -52,18 +52,10 @@ CREATE TABLE TOURLIST_USER(
 	PRIMARY KEY(user_id) 
 )ENGINE = InnoDB;
 
-CREATE TABLE ANALYSIS_RESULT(
-	tour_id INT NOT NULL,
-	analyzed_at VARCHAR(31) NOT NULL,
-	readcount_score FLOAT,
-	congestion_score FLOAT,
-	sentiment_score FLOAT,
-	corona_risk FLOAT
-)ENGINE = InnoDB;
 
-LOAD DATA LOCAL INFILE 'C:\\bigdata2020\\data\\tour_data_tab.csv'
+LOAD DATA LOCAL INFILE 'C:\\bigdata2020\\data\\tour_data_bar.csv'
 INTO TABLE tourlist_site
-FIELDS TERMINATED BY '\t'
+FIELDS TERMINATED BY '|'
 LINES TERMINATED BY '\n'
 IGNORE 1 LINES;
 
