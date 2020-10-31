@@ -5,12 +5,18 @@
 pip install django
 pip install mysqlclient
 pip install haversine
+pip install pandas
+pip install sqlalchemy
+pip install sklearn
 ```
 
 ### 2. DB 생성 및 csv파일 데이터 넣기
 - C:\bigdata2020\webapp\Prototype\쿼리문.sql 사용
 - tour_id 0번 삭제 (마리아DB에서 임의로 들어가서 삭제필요)
 - tour_data중 10개의 데이터가 제대로 입력되지않아 수기입력 필요 (tour_except.csv)
+```
+mysql -u root -p < 쿼리문.sql
+```
 
 ### 3. DB 접속 정보 변경
 ./suggest_tour/settings.py 변경
