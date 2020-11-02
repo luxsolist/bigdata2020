@@ -13,9 +13,9 @@ def index(request):
     mapx = request.session['gps_x']
     mapy = request.session['gps_y']
 
-    if request.POST:
-        mapx =  float(request.POST.get('lat'))
-        mapy =  float(request.POST.get('lng'))
+    if request.GET:
+        mapx =  float(request.GET.get('lat'))
+        mapy =  float(request.GET.get('lng'))
 
     df = recommend(mapx, mapy)
 

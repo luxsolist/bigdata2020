@@ -44,8 +44,8 @@ def recommend(lat,lng):
 
   # weight 계산
   tour_tmap["dist_scaled"] = weight_dist * (1 - tour_tmap["dist_scaled"])
-  tour_tmap["readcount_scaled"] = weight_rc * (1 - tour_tmap["readcount_scaled"])
-  tour_tmap["conavg_scaled"] = weight_conavg * (1 - tour_tmap["conavg_scaled"])
+  tour_tmap["readcount_scaled"] = weight_rc * (tour_tmap["readcount_scaled"])
+  tour_tmap["conavg_scaled"] = weight_conavg * (tour_tmap["conavg_scaled"])
 
   # feature 합산
   tour_tmap["rank"] = tour_tmap["dist_scaled"] + tour_tmap["readcount_scaled"] + tour_tmap["conavg_scaled"]

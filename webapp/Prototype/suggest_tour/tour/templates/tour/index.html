@@ -42,7 +42,7 @@
         }).open();
     }
     $('#result').click(function(){
-        let form = $('<form action="/tour/" method="POST"></form>')
+        let form = $('<form action="/tour/" method="GET"></form>')
         let long = $('<input name="lng" type="hidden"></input>')
         let lati = $('<input name="lat" type="hidden"></input>')
         let csrf = $('<input name="csrfmiddlewaretoken" type="hidden"></input>')
