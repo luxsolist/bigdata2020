@@ -1,0 +1,119 @@
+<!-- templates/tour/list.html -->
+{% extends 'tour/menu.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container">
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+<div class="container">
+        <!-- <div class='form-group'>
+            {% csrf_token %}
+            <input type="text" id="address" class="form-control" placeholder="주소">
+            <input type="button" class="btn btn-default" onclick="GetPostcode()" value="주소 검색">
+            <input type="submit" class="btn btn-primary" id="result" value="확인">
+
+        </div> -->
+        <div class="form-group">
+            <div class="input-group">
+                {% csrf_token %}
+                <input type="text" id="address" class="form-control" placeholder="주소" aria-describedby="button-addon4">
+                <div class="input-group-append" id="button-addon4">
+                    <button type ="button" class="btn btn-outline-secondary" onclick="GetPostcode()">주소검색</button>
+                    <button type ="submit" class="btn btn-outline-secondary" id="result">확인</button>
+                </div>
+            </div>
+        </div>
+    <div id="coordXY"></div>
+    <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=f98f6adb5864070de89a0c8e21bf7951&libraries=services"></script>
+<script>
+    var geocoder = new daum.maps.services.Geocoder();
+    var lat,lng='';
+
+    function GetPostcode() {
+        new daum.Postcode({
+            oncomplete: function(data) {
+                var addr = data.address; // 최종 주소 변수
+
+                // 주소 정보를 해당 필드에 넣는다.
+                document.getElementById("address").value = addr;
+                // 주소로 상세 정보를 검색
+                geocoder.addressSearch(data.address, function(results, status) {
+                    // 정상적으로 검색이 완료됐으면
+                    if (status === daum.maps.services.Status.OK) {
+
+                        var result = results[0]; //첫번째 결과의 값을 활용
+                        lng = result.x;
+                        lat = result.y;
+
+                        coordXY.innerHTML = "<br>위도 : " + lat + "<br>경도 : " + lng;
+                    }
+                }); 
+            }
+        }).open();
+    }
+    $('#result').click(function(){
+        let form = $('<form action="/tour/" method="POST"></form>')
+        let long = $('<input name="lng" type="hidden"></input>')
+        let lati = $('<input name="lat" type="hidden"></input>')
+        let csrf = $('<input name="csrfmiddlewaretoken" type="hidden"></input>')
+        let csrf_val = $('[name = csrfmiddlewaretoken]').val()
+        long.val(lng)
+        lati.val(lat)
+        csrf.val(csrf_val)
+        form.append(long, lati, csrf)
+
+        $('.form-group').append(form)
+        form.submit()
+
+        
+        //   $.ajax({
+        //     url: '/get_latlng/',
+        //     type: 'get',
+        //     data: {
+        //         'Lat':lat,
+        //         'Lng':lng,
+        //     },
+        //     success: function(res) {
+        //         $('div').load(location.href + " div")
+        //     }
+        //   })
+        })
+</script>
+    {% for item in tourlist %}
+    <div class="row restaurant-item" style="margin:20px auto;">
+        <div class="col-sm-12">
+            <div class="card border-secondary">
+                <div class="card-body">
+                    <h5 class="card-title">{{ item.title }}</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">{{ item.addr1 }}</h6>
+                    <p class="card-text">설명이 들어갑니다.</p>
+                    <a href="{% url 'detail' %}?contentid={{ item.contentid }}" class="card-link">자세히 보기</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    <div class="row">
+        <div class="col-sm-12 text-center">
+            <div class="pagination">
+                <span class="step-links text-center" style="width:100%;">
+                    {% if tourlist.has_previous %}
+                        <a href="?page=1">&laquo;</a>
+                        <a href="?page={{ tourlist.previous_page_number }}">{{ tourlist.previous_page_number }}</a>
+                    {% endif %}
+    
+                    <span class="current">
+                        {{ tourlist.number }}
+                    </span>
+    
+                    {% if tourlist.has_next %}
+                        <a href="?page={{ tourlist.next_page_number }}">{{ tourlist.next_page_number }}</a>
+                        <a href="?page={{ tourlist.paginator.num_pages }}">&raquo;</a>
+                    {% endif %}
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

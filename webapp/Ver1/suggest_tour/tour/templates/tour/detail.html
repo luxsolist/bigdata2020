@@ -1,0 +1,14 @@
+<!-- third/templates/third/detail.html -->
+{% extends 'tour/menu.html' %}
+{% load static %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12" style="margin-top:20px;">
+            <h3>{{ item.title }}</h3>
+            <p>{{ item.addr1 }}</p>
+            <p><img src='{{item.firstimage}}'></p>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,209 @@
+<html lang="en">
+{% load static %}
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>::: PACKEASY - SIGNUP :::</title>
+  <link rel="stylesheet" href="{% static 'main/assets/css/signup.css' %}">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=f12c37235171f8bf77063988f21e1b8d&libraries=services"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+  <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+</head>
+<body class='main-bg'>
+  <div class="signup-container text-c animated fadeIn">
+    <h2>회원가입</h2>
+    <p>회원이 아니신가요? PACKEASY와 함께 해요!</p>
+    <hr>
+    <!-- <form method="post" class="margin-t" action="/signup_chk/"> -->
+      {% csrf_token %}
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text">
+            <i class="fa fa-user-circle-o" aria-hidden="true"></i>
+          </span>
+        </div>
+        <input type="text" class="form-control" id="user_id" name='user_id' placeholder="아이디" required>
+        <div class="chk_id" id="chk_id">중복 검사</div>
+      </div>
+      <div class="chk_res">
+        <br>
+      </div>
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text">
+            <i class="fa fa-key" aria-hidden="true"></i>
+          </span>
+        </div>            
+        <input type="password" class="form-control" id="user_pw" name='user_pw' placeholder="비밀번호" required>
+      </div>
+      <br>
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text">
+            <i class="fa fa-key" aria-hidden="true"></i>
+          </span>
+        </div>            
+        <input type="password" class="form-control" id="user_pw_chk" placeholder="비밀번호 확인" required>
+      </div>
+      <div class="pw_chk">
+        <br>
+      </div>
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text">
+            <i class="fa fa-user-circle" aria-hidden="true"></i>
+          </span>
+        </div>            
+        <input type="text" class="form-control" id="user_name" name='user_name' placeholder="이름">
+        <div class="input-group-append">
+          <span class="input-group-text">
+            <i class="fa fa-transgender-alt" aria-hidder="true"></i>
+          </span>
+        </div>
+        <select name="gender" id="gender" required>
+          <option value="" default>성별</option>
+          <option value="M">남성</option>
+          <option value="F">여성</option>
+          <option value="O">기타</option>
+        </select>
+      </div>
+      <br>     
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text">
+            <i class="fa fa-envelope" aria-hidden="true"></i>
+          </span>
+        </div>            
+        <input type="text" class="form-control" id="email" name='email' placeholder="이메일 주소">
+      </div>
+      <br>      
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text">
+            <i class="fa fa-address-card" aria-hidden="true"></i>
+          </span>
+        </div>            
+        <input type="text" class="form-control" id="address" name='address' placeholder="집 주소">
+        <div class="chk_id" onclick='postCode()'>주소 찾기</div>
+      </div>
+      <br>
+      <input style="display:none;" name="mapx" id='mapx' value=''>
+      <input style="display:none;" name="mapy" id='mapy' value=''>
+      
+      <button type="submit" class="form-button button-l margin-b signup">회원 가입</button>
+      <!-- </form> -->
+    </div>
+    
+  <script>
+  $("#chk_id").click(function() {
+    if ($('[id = user_id]').val() == '') {
+      alert("아이디를 입력해주세요.")
+    }
+    else {
+      $.ajax({
+        type: 'POST',
+        url: '/chk_id/',
+        headers: {
+          'X-CSRFToken': $('[name=csrfmiddlewaretoken]').val(),
+        },
+        data: {
+          'user_id': $('[id = user_id]').val(),
+        },
+        success : function(res) {
+          if (res.success == 'True') {
+            $(".chk_res").html("사용가능한 계정입니다.")
+            $(".chk_res").css("color", "green")
+            // $(".form-button").removeAttr("disabled")
+            $("#user_id").attr("chk", "True")
+          }
+          else {
+            $(".chk_res").html("계정이 이미 존재합니다.")
+            $(".chk_res").css("color", "red")
+            $("#user_id").attr("chk", "False")
+          }
+        }
+      })
+    }
+  })
+
+  $("#user_pw_chk").on("change", function(e) {
+    let pw = $("#user_pw").val()
+    let pw2 = $("#user_pw_chk").val()
+    
+    if (pw == pw2) {
+      $(".pw_chk").html("비밀번호가 일치합니다.")
+      $(".pw_chk").css("color", "green")
+    }
+    else {
+      $(".pw_chk").html("비밀번호가 일치하지 않습니다.")
+      $(".pw_chk").css("color", "red")
+    }
+  })
+
+  $(".signup").on("click", function(e) {
+    if ($("#user_id").attr('chk') != "True") {
+      alert("계정이 올바르지 않습니다.")
+      return
+    }
+
+    if ($("#user_pw").val() != $("#user_pw_chk").val()) {
+      alert("비밀번호가 올바르지 않습니다.")
+      return
+    }
+
+    $.ajax({
+      type: 'POST',
+      url: '/signup_chk/',
+      headers: {
+        'X-CSRFToken': $('[name=csrfmiddlewaretoken]').val(),
+      },
+      data: {
+        'user_id': $('[id = user_id]').val(),
+        'user_pw': $('[id = user_pw]').val(),
+        'user_name': $('[id = user_name]').val(),
+        'gender': $('[id = gender]').val(),
+        'email': $('[id = email]').val(),
+        'address': $('[id = address]').val(),
+        'mapx': $('input[name = mapx]').val(),
+        'mapy': $('input[name = mapy]').val(),
+      },
+      success: function(res) {
+        if (res.success == 'True') {
+          alert("PACKEASY의 회원이 되신 것을 환영합니다!")
+          location.href = '/'
+        }
+        else {
+          alert("가입이 정상적으로 이루어지지 않았습니다.")
+        }
+      }
+    })
+  })
+  var geocoder = new daum.maps.services.Geocoder();
+
+  function postCode() {
+    new daum.Postcode({
+      oncomplete: function(data) {
+        var addr = data.address
+
+        document.getElementById('address').value = addr
+        geocoder.addressSearch(data.address, function(results, status) {
+          if (status === daum.maps.services.Status.OK) {
+            var result = results[0]
+            document.getElementById('mapx').value = result.x
+            document.getElementById('mapy').value = result.y
+
+          } else {
+            alert("NO GPS DATA :( SRY")
+          }
+        })
+      }
+    }).open()
+  }
+</script>
+</body>
+</html>
