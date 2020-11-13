@@ -52,6 +52,16 @@ CREATE TABLE TOURLIST_USER(
 	PRIMARY KEY(user_id) 
 )ENGINE = InnoDB;
 
+CREATE TABLE ANALYTICS_RESULT(
+	tour_id INT NOT NULL,
+	analyzed_at TIMESTAMP NOT NULL,
+	readcount_score FLOAT,
+	congestion_score FLOAT,
+	corona_risk FLOAT,
+	senti_word VARCHAR(255),
+	FOREIGN KEY (tour_id) REFERENCES tourlist_site(tour_id),
+	PRIMARY KEY(tour_id) 
+)ENGINE = InnoDB;
 
 LOAD DATA LOCAL INFILE 'C:\\bigdata2020\\data\\tour_data_bar.csv'
 INTO TABLE tourlist_site
@@ -62,6 +72,12 @@ IGNORE 1 LINES;
 LOAD DATA LOCAL INFILE 'C:/bigdata2020/data/day14/day14-all.csv'
 INTO TABLE tourlist_traffic
 FIELDS TERMINATED BY ','
+LINES TERMINATED BY '\n'
+IGNORE 1 LINES;
+
+LOAD DATA LOCAL INFILE 'C:\\bigdata2020\\data\\total_analysis_result.csv'
+INTO TABLE analysis_result
+FIELDS TERMINATED BY '|'
 LINES TERMINATED BY '\n'
 IGNORE 1 LINES;
 
