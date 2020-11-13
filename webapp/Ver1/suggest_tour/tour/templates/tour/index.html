@@ -2,89 +2,108 @@
 {% extends 'tour/menu.html' %}
 {% load static %}
 {% block content %}
-
+<style>
+    #r_type {
+        margin: auto;
+    }
+    .boxtitle {
+        background-color: skyblue;
+        border-radius: 1px;
+        margin: auto;
+    }
+</style>
 <div class="container">
     <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
-<div class="container">
-        <!-- <div class='form-group'>
-            {% csrf_token %}
-            <input type="text" id="address" class="form-control" placeholder="주소">
-            <input type="button" class="btn btn-default" onclick="GetPostcode()" value="주소 검색">
-            <input type="submit" class="btn btn-primary" id="result" value="확인">
-
-        </div> -->
+    <div class="container">
         <div class="form-group">
+            <h1 style="text-align:center;">추천 여행지</h1>
+            <hr>
             <div class="input-group">
                 {% csrf_token %}
-                <input type="text" id="address" class="form-control" placeholder="주소" aria-describedby="button-addon4">
+                <div class="input-group-prepend">
+                    <p style='margin:auto;'> 타입 :</p>
+                    <select name="" id="">
+                        <option value="">관광지</option>
+                        <option value="">음식점</option>
+                        <option value="">숙박업소</option>
+                    </select>
+                    <p style='margin:auto;'> 거리 :</p>
+                    <select name="dist" id="dist">
+                        <option value="5" id='dist'>5km 이내</option>
+                        <option value="10" id='dist'>10km 이내</option>
+                        <option value="25" id='dist'>25km 이내</option>
+                        <option value="50" id='dist'>50km 이내</option>
+                    </select>
+                    <p style='margin:auto;'> 인기도 :</p>
+                    <select name="" id="">
+                        <option value="">쾌적</option>
+                        <option value="">보통</option>
+                        <option value="">혼잡</option>
+                        <option value="">매우 혼잡</option>
+                    </select>
+                </div>
+                <p style="margin: auto">주소검색 : </p>
+                <input type="text" id="address" class="form-control" placeholder="주소" aria-describedby="button-addon4" disabled>
                 <div class="input-group-append" id="button-addon4">
                     <button type ="button" class="btn btn-outline-secondary" onclick="GetPostcode()">주소검색</button>
-                    <button type ="submit" class="btn btn-outline-secondary" id="result">확인</button>
+                    <button type ="button" id='lnglat' class="btn btn-outline-secondary" onclick="sendResult()">확인</button>
                 </div>
             </div>
         </div>
     <div id="coordXY"></div>
+    <hr>
     <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=f98f6adb5864070de89a0c8e21bf7951&libraries=services"></script>
-<script>
-    var geocoder = new daum.maps.services.Geocoder();
-    var lat,lng='';
+    <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=f98f6adb5864070de89a0c8e21bf7951&libraries=services"></script>
+    <script>
+        var geocoder = new daum.maps.services.Geocoder();
+        var lat,lng='';
 
-    function GetPostcode() {
-        new daum.Postcode({
-            oncomplete: function(data) {
-                var addr = data.address; // 최종 주소 변수
+        function GetPostcode() {
+            new daum.Postcode({
+                oncomplete: function(data) {
+                    var addr = data.address; // 최종 주소 변수
 
-                // 주소 정보를 해당 필드에 넣는다.
-                document.getElementById("address").value = addr;
-                // 주소로 상세 정보를 검색
-                geocoder.addressSearch(data.address, function(results, status) {
-                    // 정상적으로 검색이 완료됐으면
-                    if (status === daum.maps.services.Status.OK) {
+                    // 주소 정보를 해당 필드에 넣는다.
+                    document.getElementById("address").value = addr;
+                    // 주소로 상세 정보를 검색
+                    geocoder.addressSearch(data.address, function(results, status) {
+                        // 정상적으로 검색이 완료됐으면
+                        if (status === daum.maps.services.Status.OK) {
 
-                        var result = results[0]; //첫번째 결과의 값을 활용
-                        lng = result.x;
-                        lat = result.y;
+                            var result = results[0]; //첫번째 결과의 값을 활용
+                            lng = result.x;
+                            lat = result.y;
 
-                        coordXY.innerHTML = "<br>위도 : " + lat + "<br>경도 : " + lng;
-                    }
-                }); 
-            }
-        }).open();
-    }
-    $('#result').click(function(){
-        let form = $('<form action="/tour/" method="POST"></form>')
-        let long = $('<input name="lng" type="hidden"></input>')
-        let lati = $('<input name="lat" type="hidden"></input>')
-        let csrf = $('<input name="csrfmiddlewaretoken" type="hidden"></input>')
-        let csrf_val = $('[name = csrfmiddlewaretoken]').val()
-        long.val(lng)
-        lati.val(lat)
-        csrf.val(csrf_val)
-        form.append(long, lati, csrf)
-
-        $('.form-group').append(form)
-        form.submit()
-
-        
-        //   $.ajax({
-        //     url: '/get_latlng/',
-        //     type: 'get',
-        //     data: {
-        //         'Lat':lat,
-        //         'Lng':lng,
-        //     },
-        //     success: function(res) {
-        //         $('div').load(location.href + " div")
-        //     }
-        //   })
-        })
-</script>
+                            coordXY.innerHTML = "<br>위도 : " + lat + "<br>경도 : " + lng;
+                        }
+                    }); 
+                }
+            }).open();
+        }
+        function sendResult() {
+            let form = $('<form action="/tour/" method="POST"></form>')
+            let long = $('<input name="lng" type="hidden"></input>')
+            let lati = $('<input name="lat" type="hidden"></input>')
+            let csrf = $('<input name="csrfmiddlewaretoken" type="hidden"></input>')
+            let csrf_val = $('[name = csrfmiddlewaretoken]').val()
+            long.val(lng)
+            lati.val(lat)
+            csrf.val(csrf_val)
+            form.append(long, lati, csrf)
+            $('.form-group').append(form)
+            form.submit()
+        }
+    </script>
     {% for item in tourlist %}
     <div class="row restaurant-item" style="margin:20px auto;">
         <div class="col-sm-12">
-            <div class="card border-secondary">
-                <div class="card-body">
+            <div class="card border-secondary flex-row flex-wrap">
+                <div class="card-header block-0">
+                    <a href="{% url 'detail' %}?contentid={{ item.contentid }}">
+                        <img src="{{item.firstimage}}" style="height: 150px;">
+                    </a>
+                </div>
+                <div class="card-body" style='margin:auto;'>
                     <h5 class="card-title">{{ item.title }}</h5>
                     <h6 class="card-subtitle mb-2 text-muted">{{ item.addr1 }}</h6>
                     <p class="card-text">설명이 들어갑니다.</p>

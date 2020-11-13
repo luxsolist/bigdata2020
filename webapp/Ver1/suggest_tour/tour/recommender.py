@@ -15,9 +15,9 @@ def recommend(lat,lng):
                        right_on="tour_id")
 
   # 가중치
-  weight_dist = 0.75
-  weight_rc = 0.2
-  weight_conavg = 0.05
+  weight_dist = 0.99
+  weight_rc = 0.005
+  weight_conavg = 0.005
 
   # outlier 제외 max값 산출
   iqr = tour_tmap["readcount"].quantile(.75) - tour_tmap["readcount"].quantile(.25)
