@@ -16,15 +16,6 @@ def recommend(lat,lng):
   weight_rc = 0.005
   weight_conavg = 0.005
 
-  # outlier 제외 max값 산출
-  iqr = tour_tmap["readcount"].quantile(.75) - tour_tmap["readcount"].quantile(.25)
-  uf = tour_tmap["readcount"].quantile(.75) + (1.5 * iqr)
-
-  # outlier 보정
-  for i in range(len(tour_tmap)):
-      if tour_tmap.iloc[i, tour_tmap.columns.get_loc("readcount")] > uf:
-        tour_tmap.iloc[i, tour_tmap.columns.get_loc("readcount")] = 100000
-  
   cur_location = (lat,lng)
 
   # gps 좌표로 거리(km) 계산

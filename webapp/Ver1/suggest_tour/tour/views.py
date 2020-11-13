@@ -20,6 +20,7 @@ def index(request):
 
     df_to_json = df.reset_index().to_json(orient='records')
     tourlist = list(json.loads(df_to_json))
+
     page = request.GET.get('page') #파라미터로 넘어온 현재 페이지값
     paginator = Paginator(tourlist, 5) # 한페이지에 5개씩 표시
     items = paginator.get_page(page) # 해당페이지에 맞는 리스트로 필터링
@@ -38,7 +39,3 @@ def detail(request):
         return render(request, 'tour/detail.html', {'item': item})
     return HttpResponseRedirect('/tour/index/')
 
-def test(request):
-    content = {'tourlist':TourlistSite.objects.all() }
-
-    return render(request,'tour/test.html',content)

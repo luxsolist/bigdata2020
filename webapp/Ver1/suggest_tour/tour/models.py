@@ -45,3 +45,21 @@ class TourlistTraffic(models.Model):
 
     def __str__(self):
         return self.tour_id
+
+
+class AnalysisReseult(models.Model):
+    tour_id = models.IntegerField(primary_key=True)
+    readcount_score = models.FloatField()
+    congestion_score = models.FloatField()
+    star_score = models.FloatField()
+    corona_risk = models.FloatField()
+    senti_word = models.TextField()
+
+
+    class Meta:
+        managed = False
+        db_table = 'ANALYSIS_RESULT'
+        # unique_together = (('tour'),)
+
+    def __str__(self):
+        return self.tour_id
