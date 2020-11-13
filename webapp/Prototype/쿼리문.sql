@@ -52,6 +52,17 @@ CREATE TABLE TOURLIST_USER(
 	PRIMARY KEY(user_id) 
 )ENGINE = InnoDB;
 
+CREATE TABLE ANALYTICS_RESULT(
+	tour_id INT NOT NULL,
+	analyzed_at TIMESTAMP NOT NULL,
+	readcount_score FLOAT,
+	congestion_score FLOAT,
+	sentiment_score FLOAT,
+	corona_risk FLOAT,
+	FOREIGN KEY (tour_id) REFERENCES tourlist_site(tour_id),
+	PRIMARY KEY(tour_id) 
+)ENGINE = InnoDB;
+
 
 LOAD DATA LOCAL INFILE 'C:\\bigdata2020\\data\\tour_data_bar.csv'
 INTO TABLE tourlist_site
