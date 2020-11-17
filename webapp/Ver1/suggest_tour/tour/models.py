@@ -28,7 +28,7 @@ class TourlistSite(models.Model):
 
 
 class TourlistTraffic(models.Model):
-    tour = models.OneToOneField(TourlistSite, models.DO_NOTHING, primary_key=True)
+    tour_id = models.OneToOneField(TourlistSite, models.DO_NOTHING, primary_key=True)
     congestion_1 = models.IntegerField()
     congestion_2 = models.IntegerField()
     congestion_3 = models.IntegerField()
@@ -41,7 +41,7 @@ class TourlistTraffic(models.Model):
     class Meta:
         managed = False
         db_table = 'TOURLIST_TRAFFIC'
-        unique_together = (('tour', 'measured_at'),)
+        unique_together = (('tour_id', 'measured_at'),)
 
     def __str__(self):
         return self.tour_id
@@ -52,14 +52,20 @@ class AnalysisReseult(models.Model):
     readcount_score = models.FloatField()
     congestion_score = models.FloatField()
     star_score = models.FloatField()
-    corona_risk = models.FloatField()
     senti_word = models.TextField()
-
+    senti_count = models.IntegerField()
+    senti_sum = models.IntegerField()
+    senti_avg = models.FloatField()
+    corona_score = models.FloatField()
+    spring = models.FloatField()
+    summer = models.FloatField()
+    fall = models.FloatField()
+    winter = models.FloatField()
 
     class Meta:
         managed = False
         db_table = 'ANALYSIS_RESULT'
-        # unique_together = (('tour'),)
+        unique_together = (('tour_id'),)
 
     def __str__(self):
         return self.tour_id
