@@ -57,8 +57,15 @@ CREATE TABLE ANALYSIS_RESULT(
 	readcount_score FLOAT,
 	congestion_score FLOAT,
 	star_score FLOAT,
-	corona_risk FLOAT,
 	senti_word TEXT,
+	senti_count INT,
+	senti_sum INT,
+	senti_avg FLOAT,
+	corona_score FLOAT,
+	spring FLOAT,
+	summer FLOAT,
+	fall FLOAT,
+	winter FLOAT,
 	FOREIGN KEY (tour_id) REFERENCES tourlist_site(tour_id),
 	PRIMARY KEY(tour_id) 
 )ENGINE = InnoDB;
