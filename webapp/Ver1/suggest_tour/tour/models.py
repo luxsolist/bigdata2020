@@ -51,7 +51,7 @@ class AnalysisReseult(models.Model):
     tour_id = models.IntegerField(primary_key=True)
     readcount_score = models.FloatField()
     congestion_score = models.FloatField()
-    star_score = models.FloatField()
+    star_avg = models.FloatField()
     senti_word = models.TextField()
     senti_count = models.IntegerField()
     senti_sum = models.IntegerField()
@@ -61,6 +61,7 @@ class AnalysisReseult(models.Model):
     summer = models.FloatField()
     fall = models.FloatField()
     winter = models.FloatField()
+    star_score = models.FloatField()
 
     class Meta:
         managed = False

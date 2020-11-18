@@ -2,10 +2,10 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse,HttpResponseRedirect,JsonResponse
 from django.core.paginator import Paginator
 from django.template import loader, RequestContext
-from .models import TourlistSite
+from .models import TourlistSite,AnalysisReseult
 from .recommender import recommend
 import json
-
+import ast
 
 # 메인뷰
 def index(request):
@@ -40,10 +40,7 @@ def detail(request):
         commonWord = []
         corona_count = 1
         congestion_count = 1
-
-        mapx = request.session['gps_x']
-        mapy = request.session['gps_y']
-
+        
         tourData = get_object_or_404(TourlistSite, tour_id=request.GET.get('tour_id'))
         analysisData = get_object_or_404(AnalysisReseult, tour_id=request.GET.get('tour_id'))
 
@@ -69,12 +66,8 @@ def detail(request):
         elif analysisData.congestion_score > 0.473350:
             congestion_count = 3
 
-
         count_result = {'corona_count':corona_count,
                         'congestion_count':congestion_count}
-
-        #거리계산
-        scale_data["dist"] = tour_data.apply(lambda x: haversine(cur_location, (x['mapy'], x['mapx'])), axis=1)
 
         content = {'tourData': tourData, 
         'analysisData':analysisData,
@@ -85,4 +78,3 @@ def detail(request):
 
         return render(request, 'tour/detail.html',content )
     return HttpResponseRedirect('/tour/index.html')
-

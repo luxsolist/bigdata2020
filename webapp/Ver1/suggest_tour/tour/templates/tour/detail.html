@@ -39,7 +39,7 @@
                 {% endfor %}
 
     
-                <p>{{analysisData.spring}}</p>
+                <p>{{analysisData.star_avg}}</p>
                 <p>{{analysisData.summer}}</p>
 
     
@@ -52,7 +52,7 @@
 <script>
     var corona_count = "{{count_result.corona_count}}"
     var congestion_count = "{{count_result.congestion_count}}"
-    var star_score = "{{analysisData.star_score}}"
+    var star_avg = "{{analysisData.star_avg}}"
 
     jQuery(function($){
         for(var i=0; i<corona_count; i++){
@@ -61,13 +61,13 @@
         for(var i=0; i<congestion_count; i++){
             $(".congestion").append('<img src="/static/tour/images/car.png" id="car_image">');
         }
-        for(var i=1; i<star_score; i++){
+        for(var i=1; i<star_avg; i++){
             $(".star").append('<img src="/static/tour/images/star.png" id="star_image">');
         }
-        if(star_score % 1 != 0){
+        if(star_avg% 1 != 0){
             $(".star").append('<img src="/static/tour/images/star_half.png" id="star_half">');
         }
-        if (star_score==0){
+        if (star_avg==0){
             $(".star").append('<img src="/static/tour/images/star_blank.png" id="star_blank">');
         }
     })
