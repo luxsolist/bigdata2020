@@ -15,9 +15,13 @@ def index(request):
     if request.POST:
         mapx =  float(request.POST.get('lat'))
         mapy =  float(request.POST.get('lng'))
-
-    df = recommend(mapx, mapy)
-
+        category = request.POST.get('category')
+        dist = request.POST.get('dist')
+        congestion = request.POST.get('congestion')
+        df = recommend(mapx, mapy, category, dist, congestion)
+    else:
+        df = recommend(mapx, mapy, 'none', 'none', 'none')
+        
     df_to_json = df.reset_index().to_json(orient='records')
     tourlist = list(json.loads(df_to_json))
     page = request.GET.get('page') #파라미터로 넘어온 현재 페이지값
