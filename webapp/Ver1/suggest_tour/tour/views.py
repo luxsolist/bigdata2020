@@ -34,8 +34,55 @@ def index(request):
 
 # 상세페이지뷰
 def detail(request):
-    if 'contentid' in request.GET:
-        item = get_object_or_404(TourlistSite, contentid=request.GET.get('contentid'))
-        return render(request, 'tour/detail.html', {'item': item})
-    return HttpResponseRedirect('/tour/index/')
+    if 'tour_id' in request.GET:
+        positiveWord = []
+        negativeWord = []
+        commonWord = []
+        corona_count = 1
+        congestion_count = 1
+
+        mapx = request.session['gps_x']
+        mapy = request.session['gps_y']
+
+        tourData = get_object_or_404(TourlistSite, tour_id=request.GET.get('tour_id'))
+        analysisData = get_object_or_404(AnalysisReseult, tour_id=request.GET.get('tour_id'))
+
+        #감성단어
+        res = ast.literal_eval(analysisData.senti_word)
+        for i in range(len(res)):
+            if res[i][1] > 0:
+                positiveWord.append(res[i][0])
+            elif res[i][1] < 0:
+                negativeWord.append(res[i][0])
+            elif res[i][1] == 0:
+                commonWord.append(res[i][0])
+        
+        #코로나
+        if analysisData.corona_score > 0.015353:
+            corona_count = 2
+        elif analysisData.corona_score > 0.029890:
+            corona_count = 3
+
+        #혼잡도
+        if analysisData.congestion_score > 0.425635:
+            congestion_count = 2
+        elif analysisData.congestion_score > 0.473350:
+            congestion_count = 3
+
+
+        count_result = {'corona_count':corona_count,
+                        'congestion_count':congestion_count}
+
+        #거리계산
+        scale_data["dist"] = tour_data.apply(lambda x: haversine(cur_location, (x['mapy'], x['mapx'])), axis=1)
+
+        content = {'tourData': tourData, 
+        'analysisData':analysisData,
+        'positiveWord':positiveWord,
+        'negativeWord':negativeWord,
+        'commonWord':commonWord,
+        'count_result':count_result }
+
+        return render(request, 'tour/detail.html',content )
+    return HttpResponseRedirect('/tour/index.html')
 
