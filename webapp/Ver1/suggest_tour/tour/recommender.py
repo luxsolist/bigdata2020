@@ -16,15 +16,6 @@ def recommend(lat, lng, category, dist, congestion):
   weight_rc = 0.005
   weight_conavg = 0.005
 
-  # outlier 제외 max값 산출
-  iqr = tour_data["readcount"].quantile(.75) - tour_data["readcount"].quantile(.25)
-  uf = tour_data["readcount"].quantile(.75) + (1.5 * iqr)
-
-  # outlier 보정
-  for i in range(len(tour_data)):
-      if tour_data.iloc[i, tour_data.columns.get_loc("readcount")] > uf:
-        tour_data.iloc[i, tour_data.columns.get_loc("readcount")] = 100000
-  
   cur_location = (lat,lng)
 
   # gps 좌표로 거리(km) 계산

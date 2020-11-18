@@ -52,13 +52,21 @@ CREATE TABLE TOURLIST_USER(
 	PRIMARY KEY(user_id) 
 )ENGINE = InnoDB;
 
-CREATE TABLE ANALYTICS_RESULT(
+CREATE TABLE ANALYSIS_RESULT(
 	tour_id INT NOT NULL,
-	analyzed_at TIMESTAMP NOT NULL,
 	readcount_score FLOAT,
 	congestion_score FLOAT,
-	corona_risk FLOAT,
-	senti_word VARCHAR(255),
+	star_avg FLOAT,
+	senti_word TEXT,
+	senti_count INT,
+	senti_sum INT,
+	senti_avg FLOAT,
+	corona_score FLOAT,
+	spring FLOAT,
+	summer FLOAT,
+	fall FLOAT,
+	winter FLOAT,
+	star_score FLOAT,
 	FOREIGN KEY (tour_id) REFERENCES tourlist_site(tour_id),
 	PRIMARY KEY(tour_id) 
 )ENGINE = InnoDB;

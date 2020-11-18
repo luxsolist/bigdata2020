@@ -2,13 +2,76 @@
 {% extends 'tour/menu.html' %}
 {% load static %}
 {% block content %}
-<div class="container">
-    <div class="row">
-        <div class="col-sm-12" style="margin-top:20px;">
-            <h3>{{ item.title }}</h3>
-            <p>{{ item.addr1 }}</p>
-            <p><img src='{{item.firstimage}}'></p>
+
+<link rel="stylesheet" href="{% static 'tour/css/detail.css' %}">
+<!-- <script src="static/tour/js/detail.js"></script> -->
+<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12" style="margin-top:20px;">
+                <div class="title">
+                    <h3>{{ tourData.title }}</h3>
+                    <div class="corona">코로나지수</div>
+                    <div class="congestion">혼잡지수</div>
+                    <div class="star">평균별점</div>
+                </div>
+    
+                <p><img src='{{tourData.firstimage}}' style="width:50%;"></p>
+                <p>{{ tourData.addr1 }}</p>
+                
+                <span>긍정단어: </span>
+                {% for posi in positiveWord %}
+                    <span style="color:red">{{posi}}</span>
+                {% endfor %}
+                <br>   
+
+                <span>부정단어: </span>
+                {% for nega in negativeWord %}
+                    <span style="color:blue">{{nega}}</span>
+                {% endfor %}
+                <br>
+
+                <span>보통단어: </span>
+                {% for common in commonWord %}
+                    <span style="color:gray">{{common}}</span>
+                {% endfor %}
+
+    
+                <p>{{analysisData.star_avg}}</p>
+                <p>{{analysisData.summer}}</p>
+
+    
+            </div>
         </div>
     </div>
-</div>
+    
+</body>
+
+<script>
+    var corona_count = "{{count_result.corona_count}}"
+    var congestion_count = "{{count_result.congestion_count}}"
+    var star_avg = "{{analysisData.star_avg}}"
+
+    jQuery(function($){
+        for(var i=0; i<corona_count; i++){
+            $(".corona").append('<img src="/static/tour/images/cough.png" id="cough_image">');
+        }
+        for(var i=0; i<congestion_count; i++){
+            $(".congestion").append('<img src="/static/tour/images/car.png" id="car_image">');
+        }
+        for(var i=1; i<star_avg; i++){
+            $(".star").append('<img src="/static/tour/images/star.png" id="star_image">');
+        }
+        if(star_avg% 1 != 0){
+            $(".star").append('<img src="/static/tour/images/star_half.png" id="star_half">');
+        }
+        if (star_avg==0){
+            $(".star").append('<img src="/static/tour/images/star_blank.png" id="star_blank">');
+        }
+    })
+</script>
+
 {% endblock %}
+
