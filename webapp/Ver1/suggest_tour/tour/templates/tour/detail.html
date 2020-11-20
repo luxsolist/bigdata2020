@@ -4,51 +4,99 @@
 {% block content %}
 
 <link rel="stylesheet" href="{% static 'tour/css/detail.css' %}">
-<!-- <script src="static/tour/js/detail.js"></script> -->
 <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=f98f6adb5864070de89a0c8e21bf7951"></script>
+
+<style>
+    body {
+      margin: 0px;
+    }
+
+    .title {
+      background-color: #f1f1f1;
+      padding: 20px;
+      text-align: center;
+    }
+    /* Create three equal columns that floats next to each other */
+    .column {
+    float: left;
+    width: 48%;
+    padding: 15px;
+    }
+
+    /* Clear floats after the columns */
+    .row:after {
+    content: "";
+    display: table;
+    clear: both;
+    }
+    @media screen and (max-width:600px) {
+    .column {
+        width: 100%;
+        }
+    }
+</style>
+<head>
+    <div class="title">
+        <h3>{{ tourData.title }}</h3>
+    </div>
+</head>
 
 <body>
     <div class="container">
         <div class="row">
-            <div class="col-sm-12" style="margin-top:20px;">
-                <div class="title">
-                    <h3>{{ tourData.title }}</h3>
-                    <div class="corona">코로나지수</div>
-                    <div class="congestion">혼잡지수</div>
-                    <div class="star">평균별점</div>
+            <div class="column">
+                <div class="tour_picture">
+                    <img src='{{tourData.firstimage}}' style="width:70%;">
                 </div>
-    
-                <p><img src='{{tourData.firstimage}}' style="width:50%;"></p>
-                <p>{{ tourData.addr1 }}</p>
+                <div class="map">
+                    <h5>지도</h5>
+                    <p>{{ tourData.addr1 }}</p>
+                    <div id="map" style="width:400px;height:350px;"></div>
+                </div>
+            </div>
+
+            <div class="column">
+                <div class="corona">
+                    <h5>코로나 지수</h5>
+                </div>
+                <div class="congestion">
+                    <h5>혼잡지수</h5>
+                </div>
+                <div class="star">
+                    <h5>평균별점</h5>
+                </div>
                 
-                <span>긍정단어: </span>
-                {% for posi in positiveWord %}
-                    <span style="color:red">{{posi}}</span>
-                {% endfor %}
-                <br>   
-
-                <span>부정단어: </span>
-                {% for nega in negativeWord %}
-                    <span style="color:blue">{{nega}}</span>
-                {% endfor %}
-                <br>
-
-                <span>보통단어: </span>
-                {% for common in commonWord %}
-                    <span style="color:gray">{{common}}</span>
-                {% endfor %}
-
-    
-                <p>{{analysisData.star_avg}}</p>
-                <p>{{analysisData.summer}}</p>
-
-    
+                <div class="one-graph">
+                    <h5>계절별 검색비율</h5>
+                </div>
+                
+                <div class="senti_word">
+                    <h5>감성사전</h5>
+                    <span>긍정단어: </span>
+                    {% for posi in positiveWord %}
+                        <span style="color:red">{{posi}}</span>
+                    {% endfor %}
+                    <br>   
+            
+                    <span>부정단어: </span>
+                    {% for nega in negativeWord %}
+                        <span style="color:blue">{{nega}}</span>
+                    {% endfor %}
+                    <br>
+            
+                    <span>보통단어: </span>
+                    {% for common in commonWord %}
+                        <span style="color:gray">{{common}}</span>
+                    {% endfor %}
+                </div>
             </div>
         </div>
     </div>
-    
 </body>
 
+<!-- 코로나,혼잡도,평균별점출력스크립트 -->
 <script>
     var corona_count = "{{count_result.corona_count}}"
     var congestion_count = "{{count_result.congestion_count}}"
@@ -71,6 +119,86 @@
             $(".star").append('<img src="/static/tour/images/star_blank.png" id="star_blank">');
         }
     })
+</script>
+
+<!-- 계절별 검색그래프출력 스크립트 -->
+<script>
+    var w = 300, h = 300;
+    var spring = "{{analysisData.spring}}"*100
+    var summer = "{{analysisData.summer}}"*100
+    var fall = "{{analysisData.fall}}"*100
+    var winter = "{{analysisData.winter}}"*100
+
+    var dataName = ["봄","여름","가을","겨울"]
+    var graphData = [spring,summer,fall,winter]
+
+    var colorData = ['#79D1B0','#FDC44F','#F58E7E','#33BFDB'];
+    var pie = d3.pie();
+    var arc = d3.arc().innerRadius(40).outerRadius(150);
+    
+    var svg = d3.select(".one-graph")
+        .append("svg")
+        .attr("width", w)
+        .attr("height", h)
+        .attr("id", "graphWrap");
+    
+    var g = svg.selectAll(".pie")
+        .data(pie(graphData))
+        .enter()
+        .append("g")
+        .attr("class", "pie")
+        .attr("transform","translate("+w/2+","+h/2+")");
+    
+    g.append("path")
+        .style("fill", function(d, i) {
+            return colorData[i];
+        }) 
+        .transition()
+        .duration(400)
+        .delay(function(d, i) { 
+            return i * 400;
+        })
+        .attrTween("d", function(d, i) { 
+            var interpolate = d3.interpolate(
+                {startAngle : d.startAngle, endAngle : d.startAngle}, 
+                {startAngle : d.startAngle, endAngle : d.endAngle} 
+            );
+            return function(t){
+                return arc(interpolate(t)); 
+            }
+        });
+    
+    g.append("text")
+        .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
+        .attr("dy", ".35em")
+        .style("text-anchor", "middle")
+        .text(function(d, i) {
+            return  d.endAngle-d.startAngle > 0.2 ?
+                    dataName[i] + " (" + Math.round(1000*(d.endAngle-d.startAngle)/(Math.PI*2))/10 + "%)" : ""
+        });
+ 
+</script>
+
+<!-- 지도출력스크립트 -->
+<script>
+    var lat = "{{tourData.mapy}}"
+    var lng = "{{tourData.mapx}}"
+
+    var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
+        mapOption = { 
+            center: new kakao.maps.LatLng(lat,lng), // 지도의 중심좌표
+            level: 3 // 지도의 확대 레벨
+        };
+    
+    var map = new kakao.maps.Map(mapContainer, mapOption);
+    var markerPosition  = new kakao.maps.LatLng(lat, lng); 
+
+    var marker = new kakao.maps.Marker({
+        position: markerPosition
+    });
+
+    marker.setMap(map);
+    
 </script>
 
 {% endblock %}
