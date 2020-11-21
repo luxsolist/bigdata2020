@@ -9,8 +9,12 @@ import ast
 
 # 메인뷰
 def index(request):
+
     mapx = request.session['gps_x']
     mapy = request.session['gps_y']
+    category = 'none'
+    dist = 'none'
+    congestion = 'none'
 
     if request.POST:
         mapx =  float(request.POST.get('lat'))
@@ -18,20 +22,34 @@ def index(request):
         category = request.POST.get('category')
         dist = request.POST.get('dist')
         congestion = request.POST.get('congestion')
-        df = recommend(mapx, mapy, category, dist, congestion)
     else:
-        df = recommend(mapx, mapy, 'none', 'none', 'none')
+        if request.session["category"]:
+            category = request.session["category"]
+
+        if request.session["dist"]:
+            dist = request.session["dist"]
         
-    df_to_json = df.reset_index().to_json(orient='records')
-    tourlist = list(json.loads(df_to_json))
+        if request.session["congestion"]:
+            congestion = request.session["congestion"]
 
-    page = request.GET.get('page') #파라미터로 넘어온 현재 페이지값
-    paginator = Paginator(tourlist, 5) # 한페이지에 5개씩 표시
-    items = paginator.get_page(page) # 해당페이지에 맞는 리스트로 필터링
-    content = {'tourlist':items }
+    df = recommend(mapx, mapy, category, dist, congestion)
+    
+    try:
+        df_to_json = df.reset_index().to_json(orient='records')
+        tourlist = list(json.loads(df_to_json))
 
-    request.session['gps_x'] = mapx
-    request.session['gps_y'] = mapy
+        page = request.GET.get('page') #파라미터로 넘어온 현재 페이지값
+        paginator = Paginator(tourlist, 5) # 한페이지에 5개씩 표시
+        items = paginator.get_page(page) # 해당페이지에 맞는 리스트로 필터링
+        content = {'tourlist':items }
+
+        request.session['gps_x'] = mapx
+        request.session['gps_y'] = mapy
+        request.session['category'] = category
+        request.session['dist'] = dist
+        request.session['congestion'] = congestion
+    except AttributeError:
+        content = {}
 
     return render(request, 'tour/index.html', content)
 

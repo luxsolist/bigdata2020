@@ -21,6 +21,7 @@
     <div class="container">
         <div class="container">
             <div class="form-group">
+                <br>
                 <h1 style="text-align:center;">추천 여행지</h1>
                 <hr>
                 <form action="/tour/" method="POST" class="tour_search">
@@ -31,7 +32,7 @@
                         <select class='filters' name="category" id="category">
                             <option value="none" default>전체</option>
                             <option value="A">관광지</option>
-                            <option value="B">음식점</option>
+                            <option value="B">부대시설</option>
                             <option value="C">숙박업소</option>
                         </select>
                         <p style='margin:auto;'> 거리 :</p>
@@ -63,25 +64,31 @@
         <div id="coordXY"></div>
         <hr>
 
-        {% for item in tourlist %}
-        <div class="row restaurant-item" style="margin:20px auto;">
-            <div class="col-sm-12">
-                <div class="card border-secondary flex-row flex-wrap">
-                    <div class="card-header block-0">
-                        <a href="{% url 'detail' %}?contentid={{ item.contentid }}">
-                            <img src="{{item.firstimage}}" style="height: 150px;">
-                        </a>
-                    </div>
-                    <div class="card-body" style='margin:auto;'>
-                        <h5 class="card-title">{{ item.title }}</h5>
-                        <h6 class="card-subtitle mb-2 text-muted">{{ item.addr1 }}</h6>
-                        <p class="card-text">설명이 들어갑니다.</p>
-                        <a href="{% url 'detail' %}?tour_id={{ item.tour_id }}" class="card-link">자세히 보기</a>
+        <div class='chkres'>
+            {% for item in tourlist %}
+            <div class="row restaurant-item" style="margin:20px auto;">
+                <div class="col-sm-12">
+                    <div class="card border-secondary flex-row flex-wrap">
+                        <div class="card-header block-0">
+                            <a href="{% url 'detail' %}?tour_id={{ item.tour_id }}" class ='thumbnail_space'>
+                                {% if item.firstimage %}
+                                    <img class="thumbnails" src="{{item.firstimage}}" style="height: 160px; width: 240px;">
+                                {% else %}
+                                    <img class="thumbnails" src="/static/tour/images/image-not-found.jpg" style="height: 160px; width: 240px;">
+                                {% endif %}
+                            </a>
+                        </div>
+                        <div class="card-body" style='margin:auto;'>
+                            <h5 class="card-title">{{ item.title }}</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">{{ item.addr1 }}</h6>
+                            <p class="card-text">설명이 들어갑니다.</p>
+                            <a href="{% url 'detail' %}?tour_id={{ item.tour_id }}" class="card-link">자세히 보기</a>
+                        </div>
                     </div>
                 </div>
             </div>
+            {% endfor %}
         </div>
-        {% endfor %}
         <div class="row">
             <div class="col-sm-12 text-center">
                 <div class="pagination">
@@ -152,5 +159,13 @@
     })
     $('select').find('option[value='+sessionStorage.getItem('itemName')+']').attr('selected', 'selected')
 
+    if (document.getElementsByClassName('restaurant-item').length == 0) {
+        $(".chkres").append("<br><br><h3 style='text-align: center;'>검색 결과가 없습니다.</h3>")
+    }
+
+    if (document.getElementsByClassName('thumbnails').length == 0) {
+        $(".thumbnail_space").css("width", "160px")
+        $(".thumbnail_space").css("height", "240px")
+    }
 </script>
 {% endblock %}

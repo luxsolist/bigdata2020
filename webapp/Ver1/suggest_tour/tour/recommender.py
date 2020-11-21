@@ -12,9 +12,9 @@ def recommend(lat, lng, category, dist, congestion):
   scale_data = pd.read_sql("SELECT * FROM ANALYSIS_RESULT", engine)
 
   # 가중치
-  weight_dist = 0.99
-  weight_rc = 0.005
-  weight_conavg = 0.005
+  weight_dist = 1
+  weight_rc = 1
+  weight_conavg = 1
 
   cur_location = (lat,lng)
 
@@ -23,20 +23,17 @@ def recommend(lat, lng, category, dist, congestion):
 
   # html에서 받아온 대분류 필터링
   if category == 'A':
-    filter_tour = tour_data.loc[(tour_data["cat1"] == 'A01') | (tour_data["cat1"] == 'A02')]
-    filter_cat = scale_data.iloc[filter_tour["tour_id"]]
+    filter_cat = scale_data.loc[(tour_data['cat1'] == 'A01') | (tour_data['cat1'] == 'A02')]
   elif category =='B':
-    filter_tour = tour_data.loc[(tour_data["cat1"] == 'A03') | (tour_data["cat1"] == 'A04') | (tour_data["cat1"] == 'A05')]
-    filter_cat = scale_data.iloc[filter_tour["tour_id"]]
+    filter_cat = scale_data.loc[(tour_data['cat1'] == 'A03') | (tour_data['cat1'] == 'A04') | (tour_data['cat1'] == 'A05')]
   elif category =='C':
-    filter_tour = tour_data.loc[tour_data["cat1"] == 'B02']    
-    filter_cat = scale_data.iloc[filter_tour["tour_id"]]
+    filter_cat = scale_data.loc[tour_data['cat1'] == 'B02']
   else:
     filter_cat = scale_data
   
 
   # 거리 필터링
-  filter_dist = filter_cat if dist == 'none' else filter_cat.loc[filter_cat["dist"] < int(dist, base=10)]
+  filter_dist = filter_cat.loc[filter_cat["dist"] < int(dist, base=10)] if dist !='none' else filter_cat
 
   # 혼잡도 필터링
   filtered_data = filter_dist if congestion == 'none' else \
@@ -45,7 +42,10 @@ def recommend(lat, lng, category, dist, congestion):
 
   # 0~1 사이 값으로 scaling
   scaler = MinMaxScaler()
-  filtered_data[["dist_score"]] = scaler.fit_transform(filtered_data[["dist"]])
+  try:
+    filtered_data[["dist_score"]] = scaler.fit_transform(filtered_data[["dist"]])
+  except ValueError:
+    return
 
   # weight 계산
   filtered_data["dist_score"] = weight_dist * (1 - filtered_data["dist_score"])
@@ -57,8 +57,11 @@ def recommend(lat, lng, category, dist, congestion):
 
   # feature 합산
   result_data = tour_data.iloc[filtered_data["tour_id"]]
+
   result_data["rank"] = filtered_data["dist_score"] + filtered_data["readcount_score"] + \
-                        filtered_data["congestion_score"]
+                        filtered_data["congestion_score"] + filtered_data["star_score"] + \
+                        filtered_data["senti_avg"] + filtered_data["corona_score"]
+
   result_data["senti"] = filtered_data["senti_word"]
   # tour_data["rank"] = scale_data["dist_score"]+scale_data["readcount_score"]+scale_data["congestion_score"]
   # tour_data["senti"] = scale_data["senti_word"]
