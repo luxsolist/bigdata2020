@@ -9,7 +9,7 @@ def recommend(lat, lng, category, dist, congestion):
   # sql 호출, 데이터 불러오기
   engine = create_engine("mysql://admin:1234@localhost:3306/Tourlist")
   tour_data = pd.read_sql("SELECT * FROM TOURLIST_SITE", engine)
-  scale_data = pd.read_sql("SELECT * FROM ANALYTICS_RESULT", engine)
+  scale_data = pd.read_sql("SELECT * FROM ANALYSIS_RESULT", engine)
 
   # 가중치
   weight_dist = 0.99
@@ -23,10 +23,10 @@ def recommend(lat, lng, category, dist, congestion):
 
   # html에서 받아온 대분류 필터링
   if category == 'A':
-    filter_tour = tour_data.loc[(tour_data["cat1"] == 'A01') | (tour_data["cat1"] == 'A01')]
+    filter_tour = tour_data.loc[(tour_data["cat1"] == 'A01') | (tour_data["cat1"] == 'A02')]
     filter_cat = scale_data.iloc[filter_tour["tour_id"]]
   elif category =='B':
-    filter_tour = tour_data.loc[tour_data["cat1"] == 'A05']
+    filter_tour = tour_data.loc[(tour_data["cat1"] == 'A03') | (tour_data["cat1"] == 'A04')]
     filter_cat = scale_data.iloc[filter_tour["tour_id"]]
   elif category == 'C':
     filter_tour = tour_data.loc[tour_data["cat1"] == 'B02']    
