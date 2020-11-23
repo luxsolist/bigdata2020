@@ -20,6 +20,7 @@ CREATE TABLE TOURLIST_SITE(
 	readcount INT,
 	sigungucode INT,
 	zipcode INT,
+	overview TEXT,
 	PRIMARY KEY(tour_id)
 	
 )ENGINE = INNODB;
@@ -56,7 +57,7 @@ CREATE TABLE ANALYSIS_RESULT(
 	tour_id INT NOT NULL,
 	readcount_score FLOAT,
 	congestion_score FLOAT,
-	star_avg FLOAT,
+	star_score FLOAT,
 	senti_word TEXT,
 	senti_count INT,
 	senti_sum INT,
@@ -65,13 +66,12 @@ CREATE TABLE ANALYSIS_RESULT(
 	spring FLOAT,
 	summer FLOAT,
 	fall FLOAT,
-	winter FLOAT,
-	star_score FLOAT,
+	winder FLOAT,
 	FOREIGN KEY (tour_id) REFERENCES tourlist_site(tour_id),
 	PRIMARY KEY(tour_id) 
 )ENGINE = InnoDB;
 
-LOAD DATA LOCAL INFILE 'C:\\bigdata2020\\data\\tour_data_bar.csv'
+LOAD DATA LOCAL INFILE 'C:\\bigdata2020\\data\\tour_overview_data.csv'
 INTO TABLE tourlist_site
 FIELDS TERMINATED BY '|'
 LINES TERMINATED BY '\n'

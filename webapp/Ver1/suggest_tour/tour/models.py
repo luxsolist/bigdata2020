@@ -62,6 +62,7 @@ class AnalysisReseult(models.Model):
     fall = models.FloatField()
     winter = models.FloatField()
     star_score = models.FloatField()
+    overview = models.TextField()
 
     class Meta:
         managed = False

@@ -23,22 +23,11 @@ def recommend(lat, lng, category, dist, congestion):
 
   # html에서 받아온 대분류 필터링
   if category == 'A':
-<<<<<<< HEAD
-    filter_tour = tour_data.loc[(tour_data["cat1"] == 'A01') | (tour_data["cat1"] == 'A02')]
-    filter_cat = scale_data.iloc[filter_tour["tour_id"]]
-  elif category =='B':
-    filter_tour = tour_data.loc[(tour_data["cat1"] == 'A03') | (tour_data["cat1"] == 'A04')]
-    filter_cat = scale_data.iloc[filter_tour["tour_id"]]
-  elif category == 'C':
-    filter_tour = tour_data.loc[tour_data["cat1"] == 'B02']    
-    filter_cat = scale_data.iloc[filter_tour["tour_id"]]
-=======
     filter_cat = scale_data.loc[(tour_data['cat1'] == 'A01') | (tour_data['cat1'] == 'A02')]
   elif category =='B':
     filter_cat = scale_data.loc[(tour_data['cat1'] == 'A03') | (tour_data['cat1'] == 'A04') | (tour_data['cat1'] == 'A05')]
   elif category =='C':
     filter_cat = scale_data.loc[tour_data['cat1'] == 'B02']
->>>>>>> 8aff2e6e7c0d943e428dfa35b179422825e80cc3
   else:
     filter_cat = scale_data
   
