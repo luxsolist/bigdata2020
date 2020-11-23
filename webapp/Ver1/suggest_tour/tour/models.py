@@ -18,6 +18,7 @@ class TourlistSite(models.Model):
     readcount = models.IntegerField(blank=True, null=True)
     sigungucode = models.IntegerField(blank=True, null=True)
     zipcode = models.IntegerField(blank=True, null=True)
+    overview = models.TextField()
 
     class Meta:
         managed = False
@@ -62,7 +63,6 @@ class AnalysisReseult(models.Model):
     fall = models.FloatField()
     winter = models.FloatField()
     star_score = models.FloatField()
-    overview = models.TextField()
 
     class Meta:
         managed = False
