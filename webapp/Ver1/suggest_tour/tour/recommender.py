@@ -102,6 +102,7 @@ def recommend(lat, lng, category, dist, congestion):
   result_data["dist"] = round(result_data["dist"],2)
   result_data['star_avg'] = round(result_data["star_avg"],1)
 
+  print(result_data.sort_values(by=["rank"], ascending=False).head(20))
 
   result = result_data.sort_values(by=["rank"], ascending=False).head(50)
   result = result.reset_index(drop=True)

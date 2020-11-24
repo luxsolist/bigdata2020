@@ -47,6 +47,9 @@ def tour_first(request):
         content = {'tourlist':items }
     except AttributeError:
         content = {}
+    except TypeError:
+        content = {}
+
 
     return render(request, 'tour/index.html', content)
 
@@ -106,6 +109,8 @@ def tour_search(request):
         request.session['congestion'] = congestion
     except AttributeError:
         content = {}
+    except TypeError:
+        content = {}
 
     return render(request, 'tour/index.html', content)
 
@@ -143,8 +148,10 @@ def detail(request):
             corona_count = 3
 
         #혼잡도
+        #A
         if analysisData.congestion_score < 0.425635:
             congestion_count = 1
+            #B
         elif analysisData.congestion_score < 0.473350:
             congestion_count = 2
         else:
