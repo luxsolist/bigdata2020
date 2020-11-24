@@ -31,14 +31,20 @@ def recommend(lat, lng, category, dist, congestion):
   else:
     filter_cat = scale_data
   
-
   # 거리 필터링
   filter_dist = filter_cat.loc[filter_cat["dist"] < int(dist, base=10)] if dist !='none' else filter_cat
 
   # 혼잡도 필터링
-  filtered_data = filter_dist if congestion == 'none' else \
-    filter_dist.loc[(filter_dist["congestion_score"] <= int(congestion, base=10)) & \
-       (filter_dist["congestion_score"] > (int(congestion, base=10) - 1))]
+  if congestion == 'A':
+    filtered_data = filter_dist.loc[filter_dist["congestion_score"] < 0.425635]
+  elif congestion == "B":
+    filtered_data = filter_dist.loc[filter_dist["congestion_score"] < 0.473350]
+  else:
+    filtered_data = filter_dist
+
+  # filtered_data = filter_dist if congestion == 'none' else \
+  #   filter_dist.loc[(filter_dist["congestion_score"] <= int(congestion, base=10)) & \
+  #      (filter_dist["congestion_score"] > (int(congestion, base=10) - 1))]
 
   # 0~1 사이 값으로 scaling
   scaler = MinMaxScaler()

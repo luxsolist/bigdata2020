@@ -19,38 +19,6 @@
 
 <body>
     <div class="container">
-<<<<<<< HEAD
-        <div class="form-group">
-            <h1 style="text-align:center;">추천 여행지</h1>
-            <hr>
-            <form action="/tour/" method="POST" class="tour_search">
-            <div class="input-group">
-                {% csrf_token %}
-                <div class="input-group-prepend">
-                    <p style='margin:auto;'> 타입 :</p>
-                    <select class='filters' name="category" id="category">
-                        <option value="none" default>전체</option>
-                        <option value="A">관광지</option>
-                        <option value="B">레저시설</option>
-                        <option value="C">숙박업소</option>
-                    </select>
-                    <p style='margin:auto;'> 거리 :</p>
-                    <select class="filters" name="dist" id="dist">
-                        <option value="none" default>전체</option>
-                        <option value="50" id='dist'>50km 이내</option>
-                        <option value="100" id='dist'>100km 이내</option>
-                        <option value="150" id='dist'>150km 이내</option>
-                        <option value="200" id='dist'>200km 이내</option>
-                    </select>
-                    <p style='margin:auto;'> 인기도 :</p>
-                    <select class="filters" name="congestion" id="congestion">
-                        <option value="none" default>전체</option>
-                        <option value="1">쾌적</option>
-                        <option value="2">보통</option>
-                        <option value="3">혼잡</option>
-                        <option value="5">매우 혼잡</option>
-                    </select>
-=======
         <div class="container">
             <div class="form-group">
                 <br>
@@ -70,18 +38,17 @@
                         <p style='margin:auto;'> 거리 :</p>
                         <select class="filters" name="dist" id="dist">
                             <option value="none" default>전체</option>
-                            <option value="5" id='dist'>5km 이내</option>
-                            <option value="10" id='dist'>10km 이내</option>
-                            <option value="25" id='dist'>25km 이내</option>
-                            <option value="50" id='dist'>50km 이내</option>
+                            <option value="10" id='dist'>5km 이내</option>
+                            <option value="50" id='dist'>10km 이내</option>
+                            <option value="100" id='dist'>25km 이내</option>
+                            <option value="150" id='dist'>50km 이내</option>
                         </select>
-                        <p style='margin:auto;'> 인기도 :</p>
+                        <p style='margin:auto;'> 혼잡도 :</p>
                         <select class="filters" name="congestion" id="congestion">
                             <option value="none" default>전체</option>
-                            <option value="1">쾌적</option>
-                            <option value="2">보통</option>
-                            <option value="3">혼잡</option>
-                            <option value="5">매우 혼잡</option>
+                            <option value="A">쾌적</option>
+                            <option value="B">혼잡</option>
+                            <option value="C">매우 혼잡</option>
                         </select>
                     </div>
                     <p style="margin: auto">주소검색 : </p>
@@ -91,7 +58,6 @@
                     </div>
                     <button type ="button" id='lnglat' class="btn btn-outline-secondary" onclick="sendResult()">확인</button>
                 </form>
->>>>>>> 8aff2e6e7c0d943e428dfa35b179422825e80cc3
                 </div>
             </div>
         <div id="coordXY"></div>
