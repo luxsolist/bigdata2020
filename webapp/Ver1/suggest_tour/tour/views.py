@@ -21,8 +21,28 @@ def tour_first(request):
         df_to_json = df.reset_index().to_json(orient='records')
         tourlist = list(json.loads(df_to_json))
 
+        #코로나
+        for i in range(len(tourlist)):
+            if tourlist[i]["corona_score"] < 0.001966:
+                tourlist[i]["corona_count"] = 0
+            elif tourlist[i]["corona_score"] < 0.015353:
+                tourlist[i]["corona_count"] = 1
+            elif tourlist[i]["corona_score"] < 0.029890:
+                tourlist[i]["corona_count"] = 2
+            else:
+                tourlist[i]["corona_count"] = 3
+        
+        #혼잡도
+        for i in range(len(tourlist)):
+            if tourlist[i]["congestion_score"] < 0.425635:
+                tourlist[i]["congestion_count"] = 1
+            elif tourlist[i]["congestion_score"] < 0.473350:
+                tourlist[i]["congestion_count"] = 2
+            else :
+                tourlist[i]["congestion_count"] = 3
+
         page = request.GET.get('page') #파라미터로 넘어온 현재 페이지값
-        paginator = Paginator(tourlist, 5) # 한페이지에 5개씩 표시
+        paginator = Paginator(tourlist, 9) # 한페이지에 9개씩 표시
         items = paginator.get_page(page) # 해당페이지에 맞는 리스트로 필터링
         content = {'tourlist':items }
     except AttributeError:
@@ -54,9 +74,28 @@ def tour_search(request):
     try:
         df_to_json = df.reset_index().to_json(orient='records')
         tourlist = list(json.loads(df_to_json))
+        #코로나
+        for i in range(len(tourlist)):
+            if tourlist[i]["corona_score"] < 0.001966:
+                tourlist[i]["corona_count"] = 0
+            elif tourlist[i]["corona_score"] < 0.015353:
+                tourlist[i]["corona_count"] = 1
+            elif tourlist[i]["corona_score"] < 0.029890:
+                tourlist[i]["corona_count"] = 2
+            else:
+                tourlist[i]["corona_count"] = 3
+        
+        #혼잡도
+        for i in range(len(tourlist)):
+            if tourlist[i]["congestion_score"] < 0.425635:
+                tourlist[i]["congestion_count"] = 1
+            elif tourlist[i]["congestion_score"] < 0.473350:
+                tourlist[i]["congestion_count"] = 2
+            else :
+                tourlist[i]["congestion_count"] = 3
 
         page = request.GET.get('page') #파라미터로 넘어온 현재 페이지값
-        paginator = Paginator(tourlist, 5) # 한페이지에 5개씩 표시
+        paginator = Paginator(tourlist, 9) # 한페이지에 9개씩 표시
         items = paginator.get_page(page) # 해당페이지에 맞는 리스트로 필터링
         content = {'tourlist':items }
 
@@ -110,7 +149,7 @@ def detail(request):
             congestion_count = 2
         else:
             congestion_count = 3
-            
+
         count_result = {'corona_count':corona_count,
                         'congestion_count':congestion_count}
 

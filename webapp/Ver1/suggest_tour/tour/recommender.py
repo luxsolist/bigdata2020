@@ -24,6 +24,7 @@ def recommend(lat, lng, category, dist, congestion):
   # gps 좌표로 거리(km) 계산
   scale_data["dist"] = tour_data.apply(lambda x: haversine(cur_location, (x['mapy'], x['mapx'])), axis=1)
 
+
   # html에서 받아온 대분류 필터링
   if category == 'A':
     filter_cat = scale_data.loc[(tour_data['cat1'] == 'A01') | (tour_data['cat1'] == 'A02')]
@@ -85,9 +86,6 @@ def recommend(lat, lng, category, dist, congestion):
   else :
     filtered_data['season_score'] = weight_season * filtered_data['winter']
 
-  # #감성단어 추가
-  # tour_data = pd.merge(left = tour_data, right = total_result[["tour_id","senti"]], how = "left", on = "tour_id")
-
   # feature 합산
   try:
     result_data = tour_data.iloc[filtered_data["tour_id"]]
@@ -99,10 +97,13 @@ def recommend(lat, lng, category, dist, congestion):
                         filtered_data["star_score"] + filtered_data["season_score"]
 
   result_data["senti"] = filtered_data["senti_word"]
-  # tour_data["rank"] = scale_data["dist_score"]+scale_data["readcount_score"]+scale_data["congestion_score"]
-  # tour_data["senti"] = scale_data["senti_word"]
+
+  result_data[["senti","corona_score","congestion_score","star_avg","dist"]] = filtered_data[["senti_word","corona_score","congestion_score","star_avg","dist"]]
+  result_data["dist"] = round(result_data["dist"],2)
+  result_data['star_avg'] = round(result_data["star_avg"],1)
+
 
   result = result_data.sort_values(by=["rank"], ascending=False).head(50)
   result = result.reset_index(drop=True)
-  
+
   return result
