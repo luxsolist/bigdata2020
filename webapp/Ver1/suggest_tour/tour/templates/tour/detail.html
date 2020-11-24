@@ -14,21 +14,146 @@
 <script src="https://cdn.anychart.com/releases/v8/js/anychart-tag-cloud.min.js"></script>
 
 <style>
+    @font-face {
+        font-family: 'S-CoreDream-4Regular';
+        src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-4Regular.woff') format('woff');
+        font-weight: normal;
+        font-style: normal;
+    }
     body {
-      margin: 0px;
+        font-family: 'S-CoreDream-4Regular', Arial, Helvetica, sans-serif;
     }
     div{
-        font-family: 'Nanum Gothic', sans-serif;
         padding: 5px;
+        margin: auto;
+    }
+    .container {
+        padding: 20px;
+    }
+    .tour_picture {
+        border-right: 1px solid lightgrey;
+        text-align: center;
+    }
+    .scores {
+        background-color: #f7f7f7;
+        font-size: 1rem;
+        height: 100px;
+    }
+    .senti_word, #map{
+        height: 300px;
+    }
+    .senti_word {
+        margin: 10px;
+    }
+    .expl {
+        font-size: 1.25rem;
+    }
+    .desc_area {
+        background-color: #f7f7f7;
+    }
+    #img {
+        height: 20px;
+    }
+    .chat_log {
+        width: 250px;
+        padding-top: 10px;
     }
     
 </style>
 
 <body>
-    <div class="container pt-4">
+    <div class="container">
+        <div class="row">
+            <div class="col tourTitle">
+                <h2>{{ tourData.title }}</h2>
+                <hr>
+                <p>{{ tourData.addr1 }}</p>
+            </div>
+            <div class="col-md-7 row align-items-start">
+                <div id="chatLog" class="col chat_log scores" readonly>
+                    <p>날씨</p>
+                    <img src="" id="img"></img>
+                </div>
+                <div class="col scores">
+                    <div class="corona">
+                        <p>코로나 지수</p>
+                    </div>
+                </div>
+                <div class="col scores">
+                    <div class="congestion">
+                        <p>교통 혼잡도</p>
+                    </div>
+                </div>
+                <div class="col scores">
+                    <div class="star">
+                        <p>평균 별점</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row desc_area">
+            <div class="col-md-4">
+                <div class="tour_picture">
+                    {% if tourData.firstimage %}
+                    <img class="thumbnails" src="{{tourData.firstimage}}" style="width:90%;">
+                    {% else %}
+                    <img class="thumbnails" src="/static/tour/images/image-not-found.jpg" style="width:90%;">
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-md">
+                <div class="overview">
+                    <p class='expl'>{{tourData.overview}}</p>
+                </div>
+            </div>
+        </div>
+        <hr>
         <div class="row">
             <div class="col-md">
-                <h1>{{ tourData.title }}</h1>
+                <h4>감성사전</h4>
+                <hr>
+                <div class="senti_word desc_area" id="senti_word">
+                </div>
+            </div>
+            <div class="col-md">
+                <h4>계절별 검색 비율</h4>
+                <hr>
+                <div class="one-graph desc_area">
+                </div>
+            </div>
+            <div class="col-md">
+                <h4>지도</h4>
+                <hr>
+                <div class="map desc_area">
+                    <div id="map"></div>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <!-- <div class="row desc_area">
+            <div class="col-md">
+                <div class="senti_word" id="senti_word">
+                </div>
+            </div>
+            <div class="col-md">
+                <div class="one-graph">
+                </div>
+            </div>
+            <div class="col-md">
+                <div class="map">
+                    <div id="map"></div>
+                </div>
+            </div>
+        </div> -->
+
+    </div>
+
+
+    <!-- <div class="container pt-6">
+        <div class="row tourTitle">
+            <div class="col-md">
+                <h2>{{ tourData.title }}</h2>
+                <hr>
                 <p>{{ tourData.addr1 }}</p>
             </div>
             <div class="col-md-left" style="background-color:#f7f7f7">
@@ -40,7 +165,7 @@
         </div>
 
         <div class="row">
-            <div class="col-md">
+            <div class="col-md-4">
                 <div class="tour_picture">
                     {% if tourData.firstimage %}
                     <img class="thumbnails" src="{{tourData.firstimage}}" style="width:90%;">
@@ -51,8 +176,8 @@
             </div>
 
 
-            <div class="col-md">
-                <div class="row">
+            <div class="col-md-6">
+                <div class="row desc_area">
                     <div class="col-md" style="background-color:#f7f7f7">
                         <div class="corona">
                             <h5>코로나 지수</h5>
@@ -69,8 +194,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md" >
+                <div class="row desc_area">
+                    <div class="col-md">
                         <div class="overview" style="background-color:#f7f7f7">
                             <h5>설명</h5>
                             {{tourData.overview}}
@@ -79,28 +204,28 @@
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-md">
+        <div class="row desc_area">
+            <div class="col-md-4">
                 <div class="senti_word" id="senti_word">
                     <h5>감성사전</h5>
                 </div>
             </div>
-            <div class="col-md">
+            <div class="col-md-4">
+                <h5>계절별 검색비율</h5>
                 <div class="one-graph">
-                    <h5>계절별 검색비율</h5>
                 </div>
             </div>
         </div>
-        <div class="row" style="width:1100px;height:650px;padding:10px;">
+        <div class="row">
             <div class="col-md">
                 <div class="map">
                     <h5>지도</h5>
                     <p>{{ tourData.addr1 }}</p>
-                    <div id="map" style="width:1000px;height:500px;"></div>
+                    <div id="map"></div>
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
     
 </body>
 
@@ -113,7 +238,7 @@
         itemDict = {
             'x':"{{posi}}",
             'value':10, 
-            category:'긍정'
+            'category':'긍정'
         };
         word_list.push(itemDict)
     "{% endfor%}"
@@ -122,7 +247,7 @@
         itemDict = {
             'x':"{{nega}}",
             'value':10, 
-            category:'부정'
+            'category':'부정'
         };
         word_list.push(itemDict)
     "{% endfor%}"
@@ -131,7 +256,7 @@
         itemDict = {
             'x':"{{common}}",
             'value':10, 
-            category:'보통'
+            'category':'보통'
         };
         word_list.push(itemDict)
     "{% endfor%}"

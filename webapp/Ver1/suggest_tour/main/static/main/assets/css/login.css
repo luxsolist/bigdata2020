@@ -1,8 +1,14 @@
-
+@font-face {
+  font-family: 'S-CoreDream-4Regular';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-4Regular.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
 html {
   height: 100%;
 }
 body {
+  font-family: 'S-CoreDream-4Regular', Arial, Helvetica, sans-serif;
   height: 100%;
   margin: 0;
   background-repeat: no-repeat;
@@ -159,7 +165,6 @@ body {
 .form-control::-webkit-input-placeholder { color: #BDBDBD; }
 
 /* Container */
-
 .container-content {
   background-color: #3a3a3aa2;
   color: inherit;
