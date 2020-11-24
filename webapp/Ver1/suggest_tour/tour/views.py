@@ -8,14 +8,29 @@ import json
 import ast
 
 # 메인뷰
-def index(request):
-
-    mapx = request.session['gps_x']
-    mapy = request.session['gps_y']
+def tour_first(request):
+    mapx = request.session["gps_x"]
+    mapy = request.session["gps_y"]
     category = 'none'
     dist = 'none'
     congestion = 'none'
 
+    df = recommend(mapx, mapy, category, dist, congestion)
+
+    try:
+        df_to_json = df.reset_index().to_json(orient='records')
+        tourlist = list(json.loads(df_to_json))
+
+        page = request.GET.get('page') #파라미터로 넘어온 현재 페이지값
+        paginator = Paginator(tourlist, 5) # 한페이지에 5개씩 표시
+        items = paginator.get_page(page) # 해당페이지에 맞는 리스트로 필터링
+        content = {'tourlist':items }
+    except AttributeError:
+        content = {}
+
+    return render(request, 'tour/index.html', content)
+
+def tour_search(request):
     if request.POST:
         mapx =  float(request.POST.get('lat'))
         mapy =  float(request.POST.get('lng'))
