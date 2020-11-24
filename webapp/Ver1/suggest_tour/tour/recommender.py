@@ -3,6 +3,7 @@ import numpy as np
 from sqlalchemy import create_engine
 from haversine import haversine
 from sklearn.preprocessing import MinMaxScaler
+import datetime
 
 
 def recommend(lat, lng, category, dist, congestion):
@@ -12,9 +13,11 @@ def recommend(lat, lng, category, dist, congestion):
   scale_data = pd.read_sql("SELECT * FROM ANALYSIS_RESULT", engine)
 
   # 가중치
-  weight_dist = 1
-  weight_rc = 1
-  weight_conavg = 1
+  weight_rc = 0.3
+  weight_conavg = 0.2
+  weight_sentiavg = 0.15
+  weight_starscore = 0.2
+  weight_season = 0.15
 
   cur_location = (lat,lng)
 
@@ -53,20 +56,47 @@ def recommend(lat, lng, category, dist, congestion):
   except ValueError:
     return
 
+  # 계절 구하기
+  now_month = datetime.datetime.now().month
+
+  if (now_month == 3) | (now_month == 4) | (now_month == 5):
+      season = 'spring'
+  elif (now_month == 6) | (now_month == 7) | (now_month == 8):
+      season = 'summer'
+  elif (now_month == 9) | (now_month == 10) | (now_month == 11):
+      season = 'fall'
+  else :
+      season = 'winter'
+    
+  filtered_data['senti_avg'] = scaler.fit_transform(filtered_data[['senti_avg']])
+
   # weight 계산
-  filtered_data["dist_score"] = weight_dist * (1 - filtered_data["dist_score"])
   filtered_data["readcount_score"] = weight_rc * (filtered_data["readcount_score"])
   filtered_data["congestion_score"] = weight_conavg * (filtered_data["congestion_score"])
+  filtered_data['congestion_score'] = weight_conavg * filtered_data['congestion_score']
+  filtered_data['senti_score'] = weight_sentiavg * filtered_data['senti_avg']
+  filtered_data['star_score'] = weight_starscore * filtered_data['star_score']
+  if season == 'spring' :
+    filtered_data['season_score'] = weight_season * filtered_data['spring']
+  elif season == 'summer' :
+    filtered_data['season_score'] = weight_season * filtered_data['summer']
+  elif season == 'fall' :
+    filtered_data['season_score'] = weight_season * filtered_data['fall']
+  else :
+    filtered_data['season_score'] = weight_season * filtered_data['winter']
 
   # #감성단어 추가
   # tour_data = pd.merge(left = tour_data, right = total_result[["tour_id","senti"]], how = "left", on = "tour_id")
 
   # feature 합산
-  result_data = tour_data.iloc[filtered_data["tour_id"]]
+  try:
+    result_data = tour_data.iloc[filtered_data["tour_id"]]
+  except IndexError:
+    return
 
-  result_data["rank"] = filtered_data["dist_score"] + filtered_data["readcount_score"] + \
-                        filtered_data["congestion_score"] + filtered_data["star_score"] + \
-                        filtered_data["senti_avg"] + filtered_data["corona_score"]
+  result_data["rank"] = filtered_data["readcount_score"] + \
+                        filtered_data["congestion_score"] + filtered_data["senti_score"] + \
+                        filtered_data["star_score"] + filtered_data["season_score"]
 
   result_data["senti"] = filtered_data["senti_word"]
   # tour_data["rank"] = scale_data["dist_score"]+scale_data["readcount_score"]+scale_data["congestion_score"]
@@ -74,5 +104,5 @@ def recommend(lat, lng, category, dist, congestion):
 
   result = result_data.sort_values(by=["rank"], ascending=False).head(50)
   result = result.reset_index(drop=True)
-
+  
   return result

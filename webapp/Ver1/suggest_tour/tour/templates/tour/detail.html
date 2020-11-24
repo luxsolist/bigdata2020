@@ -4,127 +4,198 @@
 {% block content %}
 
 <link rel="stylesheet" href="{% static 'tour/css/detail.css' %}">
-<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap" rel="stylesheet">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://d3js.org/d3.v4.min.js"></script>
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=f98f6adb5864070de89a0c8e21bf7951"></script>
+
+<script src="https://cdn.anychart.com/releases/v8/js/anychart-base.min.js"></script>
+<script src="https://cdn.anychart.com/releases/v8/js/anychart-tag-cloud.min.js"></script>
 
 <style>
     body {
       margin: 0px;
     }
-
-    .title {
-      background-color: #f1f1f1;
-      padding: 20px;
-      text-align: center;
+    div{
+        font-family: 'Nanum Gothic', sans-serif;
+        padding: 5px;
     }
-    /* Create three equal columns that floats next to each other */
-    .column {
-    float: left;
-    width: 48%;
-    padding: 15px;
-    }
-
-    /* Clear floats after the columns */
-    .row:after {
-    content: "";
-    display: table;
-    clear: both;
-    }
-    @media screen and (max-width:600px) {
-    .column {
-        width: 100%;
-        }
-    }
+    
 </style>
-<head>
-    <div class="title">
-        <h3>{{ tourData.title }}</h3>
-    </div>
-</head>
 
 <body>
-    <div class="container">
+    <div class="container pt-4">
         <div class="row">
-            <div class="column">
-                <div class="tour_picture">
-                    <img src='{{tourData.firstimage}}' style="width:70%;">
+            <div class="col-md">
+                <h1>{{ tourData.title }}</h1>
+                <p>{{ tourData.addr1 }}</p>
+            </div>
+            <div class="col-md-left" style="background-color:#f7f7f7">
+                <div id="chatLog" class="chat_log" readonly>
+                    <h5>날씨</h5>
+                    <img src="" id="img"></img>
                 </div>
-                <div class="map">
-                    <h5>지도</h5>
-                    <p>{{ tourData.addr1 }}</p>
-                    <div id="map" style="width:400px;height:350px;"></div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md">
+                <div class="tour_picture">
+                    {% if tourData.firstimage %}
+                    <img class="thumbnails" src="{{tourData.firstimage}}" style="width:90%;">
+                    {% else %}
+                    <img class="thumbnails" src="/static/tour/images/image-not-found.jpg" style="width:90%;">
+                    {% endif %}
                 </div>
             </div>
 
-            <div class="column">
-                <div class="overview">
-                    {{tourData.overview}}
+
+            <div class="col-md">
+                <div class="row">
+                    <div class="col-md" style="background-color:#f7f7f7">
+                        <div class="corona">
+                            <h5>코로나 지수</h5>
+                        </div>
+                    </div>
+                    <div class="col-md" style="background-color:#f7f7f7">
+                        <div class="congestion">
+                            <h5>관광지 혼잡도</h5>
+                        </div>
+                    </div>
+                    <div class="col-md" style="background-color:#f7f7f7">
+                        <div class="star">
+                            <h5>평균 별점</h5>
+                        </div>
+                    </div>
                 </div>
-                <div class="corona">
-                    <h5>코로나 지수</h5>
+                <div class="row">
+                    <div class="col-md" >
+                        <div class="overview" style="background-color:#f7f7f7">
+                            <h5>설명</h5>
+                            {{tourData.overview}}
+                        </div>
+                    </div>
                 </div>
-                <div class="congestion">
-                    <h5>혼잡지수</h5>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md">
+                <div class="senti_word" id="senti_word">
+                    <h5>감성사전</h5>
                 </div>
-                <div class="star">
-                    <h5>평균별점</h5>
-                </div>
-                
+            </div>
+            <div class="col-md">
                 <div class="one-graph">
                     <h5>계절별 검색비율</h5>
                 </div>
-                
-                <div class="senti_word">
-                    <h5>감성사전</h5>
-                    <span>긍정단어: </span>
-                    {% for posi in positiveWord %}
-                        <span style="color:red">{{posi}}</span>
-                    {% endfor %}
-                    <br>   
-            
-                    <span>부정단어: </span>
-                    {% for nega in negativeWord %}
-                        <span style="color:blue">{{nega}}</span>
-                    {% endfor %}
-                    <br>
-            
-                    <span>보통단어: </span>
-                    {% for common in commonWord %}
-                        <span style="color:gray">{{common}}</span>
-                    {% endfor %}
+            </div>
+        </div>
+        <div class="row" style="width:1100px;height:650px;padding:10px;">
+            <div class="col-md">
+                <div class="map">
+                    <h5>지도</h5>
+                    <p>{{ tourData.addr1 }}</p>
+                    <div id="map" style="width:1000px;height:500px;"></div>
                 </div>
             </div>
         </div>
     </div>
+    
 </body>
+
+<!-- 워드클라우드 그리는 스크립트 -->
+<script>
+    var word_list = new Array();
+    var itemDict = {};
+
+    "{% for posi in positiveWord %}"
+        itemDict = {
+            'x':"{{posi}}",
+            'value':10, 
+            category:'긍정'
+        };
+        word_list.push(itemDict)
+    "{% endfor%}"
+
+    "{% for nega in negativeWord %}"
+        itemDict = {
+            'x':"{{nega}}",
+            'value':10, 
+            category:'부정'
+        };
+        word_list.push(itemDict)
+    "{% endfor%}"
+
+    "{% for common in commonWord %}"
+        itemDict = {
+            'x':"{{common}}",
+            'value':10, 
+            category:'보통'
+        };
+        word_list.push(itemDict)
+    "{% endfor%}"
+
+    console.log(word_list)
+    anychart.onDocumentReady(function() {
+        
+        var chart = anychart.tagCloud(word_list);
+        chart.angles([0, -45, 90]);
+        // chart.angles([0])
+        chart.fontFamily('Nanum Gothic')
+
+        // 색설정
+        var customColorScale = anychart.scales.ordinalColor();
+        customColorScale.colors(["#1E21A3","#FA2343","#606066"]);
+
+        chart.colorRange(true);
+        chart.colorScale(customColorScale);
+        chart.colorRange().enabled(true);
+        chart.colorRange().length('0%');
+
+        // 간격
+        chart.textSpacing(10);
+        // display the word cloud chart
+        chart.container("senti_word");
+        chart.draw();
+    });
+
+    </script>
 
 <!-- 코로나,혼잡도,평균별점출력스크립트 -->
 <script>
+
+
     var corona_count = "{{count_result.corona_count}}"
     var congestion_count = "{{count_result.congestion_count}}"
     var star_avg = "{{analysisData.star_avg}}"
 
     jQuery(function($){
         for(var i=0; i<corona_count; i++){
-            $(".corona").append('<img src="/static/tour/images/cough.png" id="cough_image">');
+            $(".corona").append('<img src="/static/tour/images/cough.png" id="cough_image" style="width : 20%;">');
         }
-        for(var i=0; i<congestion_count; i++){
-            $(".congestion").append('<img src="/static/tour/images/car.png" id="car_image">');
+
+        if(congestion_count==1){
+            $(".congestion").append(`<img src="/static/tour/images/congestion_1.png" id="car_image" style="width : 20%;"><b>  쾌적</b>`);
+        } else if (congestion_count==2){
+            $(".congestion").append('<img src="/static/tour/images/congestion_2.png" id="car_image" style="width : 20%;"><b>  보통</b>');
+        } else if (congestion_count==3){
+            $(".congestion").append('<img src="/static/tour/images/congestion_3.png" id="car_image" style="width : 20%;"><b>  혼잡</b>');
         }
+
         for(var i=1; i<star_avg; i++){
-            $(".star").append('<img src="/static/tour/images/star.png" id="star_image">');
+            $(".star").append('<img src="/static/tour/images/star.png" id="star_image" style="width : 20%;">');
         }
-        if(star_avg% 1 != 0){
-            $(".star").append('<img src="/static/tour/images/star_half.png" id="star_half">');
+        if(star_avg % 1 != 0){
+            $(".star").append('<img src="/static/tour/images/star_half.png" id="star_half" style="width :20%;">');
         }
         if (star_avg==0){
-            $(".star").append('<img src="/static/tour/images/star_blank.png" id="star_blank">');
+            $(".star").append('<img src="/static/tour/images/star_blank.png" id="star_blank" style="width : 20%;">');
         }
     })
 </script>
 
-<!-- 계절별 검색그래프출력 스크립트 -->
+<!-- 계절별 그래프출력 스크립트 -->
 <script>
     var w = 300, h = 300;
     var spring = "{{analysisData.spring}}"*100
@@ -204,5 +275,24 @@
     
 </script>
 
+<!-- 실시간날씨API -->
+<script>
+    var get_lat = "{{tourData.mapy}}"
+    var get_lng = "{{tourData.mapx}}"
+    var apiURL ="http://api.openweathermap.org/data/2.5/weather?lat="+get_lat+"&lon="+get_lng+"&APPID=fc18ef09fcded366103c4fb33b0d2b3b&units=metri";  
+    $.ajax({
+        url : apiURL,
+        method : 'GET',
+        success :  (data)=> {
+            var temp_max = String((data.main.temp_max - 272)).substring(0,3);
+            var temp_min = String((data.main.temp_min - 272)).substring(0,3); 
+            
+            var content =`${temp_max}℃ / ${temp_min}℃`
+            $('#chatLog').append(content); 
+            var imgURL = "http://openweathermap.org/img/wn/" + data.weather[0].icon + ".png"; // 아이콘 가져오기
+            $('#img').attr("src", imgURL);
+        }
+    })
+</script>
 {% endblock %}
 
