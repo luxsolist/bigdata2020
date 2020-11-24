@@ -56,8 +56,11 @@ def recommend(lat, lng, category, dist, congestion):
   # tour_data = pd.merge(left = tour_data, right = total_result[["tour_id","senti"]], how = "left", on = "tour_id")
 
   # feature 합산
-  result_data = tour_data.iloc[filtered_data["tour_id"]]
-
+  try:
+    result_data = tour_data.iloc[filtered_data["tour_id"]]
+  except IndexError:
+    return
+    
   result_data["rank"] = filtered_data["dist_score"] + filtered_data["readcount_score"] + \
                         filtered_data["congestion_score"] + filtered_data["star_score"] + \
                         filtered_data["senti_avg"] + filtered_data["corona_score"]
@@ -68,5 +71,5 @@ def recommend(lat, lng, category, dist, congestion):
 
   result = result_data.sort_values(by=["rank"], ascending=False).head(50)
   result = result.reset_index(drop=True)
-
+  
   return result

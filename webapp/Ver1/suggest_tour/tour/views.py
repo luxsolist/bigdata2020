@@ -91,18 +91,24 @@ def detail(request):
             elif res[i][1] == 0:
                 commonWord.append(res[i][0])
         
-        #코로나
-        if analysisData.corona_score > 0.015353:
+       #코로나
+        if analysisData.corona_score <= 0.001966:
+            corona_count = 0
+        elif analysisData.corona_score <= 0.015353:
+            corona_count = 1
+        elif analysisData.corona_score <= 0.029890:
             corona_count = 2
-        elif analysisData.corona_score > 0.029890:
+        else :
             corona_count = 3
 
         #혼잡도
-        if analysisData.congestion_score > 0.425635:
+        if analysisData.congestion_score < 0.425635:
+            congestion_count = 1
+        elif analysisData.congestion_score < 0.473350:
             congestion_count = 2
-        elif analysisData.congestion_score > 0.473350:
+        else:
             congestion_count = 3
-
+            
         count_result = {'corona_count':corona_count,
                         'congestion_count':congestion_count}
 
