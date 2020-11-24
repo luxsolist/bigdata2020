@@ -38,6 +38,8 @@ def tour_search(request):
         dist = request.POST.get('dist')
         congestion = request.POST.get('congestion')
     else:
+        mapx = request.session["gps_x"]
+        mapy = request.session["gps_y"]
         if request.session["category"]:
             category = request.session["category"]
 
