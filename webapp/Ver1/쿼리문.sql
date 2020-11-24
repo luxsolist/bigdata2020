@@ -20,6 +20,7 @@ CREATE TABLE TOURLIST_SITE(
 	readcount INT,
 	sigungucode INT,
 	zipcode INT,
+	overview TEXT,
 	PRIMARY KEY(tour_id)
 	
 )ENGINE = INNODB;
@@ -71,7 +72,7 @@ CREATE TABLE ANALYSIS_RESULT(
 	PRIMARY KEY(tour_id) 
 )ENGINE = InnoDB;
 
-LOAD DATA LOCAL INFILE 'C:\\bigdata2020\\data\\tour_data_bar.csv'
+LOAD DATA LOCAL INFILE 'C:\\bigdata2020\\data\\tour_overview_data.csv'
 INTO TABLE tourlist_site
 FIELDS TERMINATED BY '|'
 LINES TERMINATED BY '\n'

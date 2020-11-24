@@ -18,6 +18,7 @@ class TourlistSite(models.Model):
     readcount = models.IntegerField(blank=True, null=True)
     sigungucode = models.IntegerField(blank=True, null=True)
     zipcode = models.IntegerField(blank=True, null=True)
+    overview = models.TextField()
 
     class Meta:
         managed = False
