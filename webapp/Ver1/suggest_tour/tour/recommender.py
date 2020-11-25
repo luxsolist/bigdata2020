@@ -46,10 +46,6 @@ def recommend(lat, lng, category, dist, congestion):
   else:
     filtered_data = filter_dist
 
-  # filtered_data = filter_dist if congestion == 'none' else \
-  #   filter_dist.loc[(filter_dist["congestion_score"] <= int(congestion, base=10)) & \
-  #      (filter_dist["congestion_score"] > (int(congestion, base=10) - 1))]
-
   # 0~1 사이 값으로 scaling
   scaler = MinMaxScaler()
   try:
@@ -78,8 +74,7 @@ def recommend(lat, lng, category, dist, congestion):
 
   # weight 계산
   filtered_data["readcount_score"] = weight_rc * (filtered_data["readcount_score"])
-  filtered_data["congestion_score"] = weight_conavg * (filtered_data["congestion_score"])
-  filtered_data['congestion_score'] = weight_conavg * filtered_data['congestion_score']
+  filtered_data['congestion_score_temp'] = weight_conavg * filtered_data['congestion_score']
   filtered_data['senti_score'] = weight_sentiavg * filtered_data['senti_avg']
   filtered_data['star_score'] = weight_starscore * filtered_data['star_score']
   if season == 'spring' :
@@ -98,7 +93,7 @@ def recommend(lat, lng, category, dist, congestion):
     return
 
   result_data["rank"] = filtered_data["readcount_score"] + \
-                        filtered_data["congestion_score"] + filtered_data["senti_score"] + \
+                        filtered_data["congestion_score_temp"] + filtered_data["senti_score"] + \
                         filtered_data["star_score"] + filtered_data["season_score"]
 
   result_data["senti"] = filtered_data["senti_word"]
@@ -107,7 +102,6 @@ def recommend(lat, lng, category, dist, congestion):
   result_data["dist"] = round(result_data["dist"],2)
   result_data['star_avg'] = round(result_data["star_avg"],1)
 
-  print(result_data.sort_values(by=["rank"], ascending=False).head(20))
 
   result = result_data.sort_values(by=["rank"], ascending=False).head(50)
   result = result.reset_index(drop=True)
