@@ -13,11 +13,13 @@ def recommend(lat, lng, category, dist, congestion):
   scale_data = pd.read_sql("SELECT * FROM ANALYSIS_RESULT", engine)
 
   # 가중치
-  weight_rc = 0.3
-  weight_conavg = 0.2
+  weight_dist = 0.1
+  weight_rc = 0.2
+  weight_conavg = 0.15
   weight_sentiavg = 0.15
   weight_starscore = 0.2
-  weight_season = 0.15
+  weight_season = 0.1
+  weight_covid = 0.1
 
   cur_location = (lat,lng)
 
@@ -46,10 +48,6 @@ def recommend(lat, lng, category, dist, congestion):
   else:
     filtered_data = filter_dist
 
-  # filtered_data = filter_dist if congestion == 'none' else \
-  #   filter_dist.loc[(filter_dist["congestion_score"] <= int(congestion, base=10)) & \
-  #      (filter_dist["congestion_score"] > (int(congestion, base=10) - 1))]
-
   # 0~1 사이 값으로 scaling
   scaler = MinMaxScaler()
   try:
@@ -70,12 +68,18 @@ def recommend(lat, lng, category, dist, congestion):
       season = 'winter'
     
   filtered_data['senti_avg'] = scaler.fit_transform(filtered_data[['senti_avg']])
+  
+  filtered_data['spring'] = scaler.fit_transform(filtered_data[['spring']])
+  filtered_data['summer'] = scaler.fit_transform(filtered_data[['summer']])
+  filtered_data['fall'] = scaler.fit_transform(filtered_data[['fall']])
+  filtered_data['winter'] = scaler.fit_transform(filtered_data[['winter']])
 
   # weight 계산
+  filtered_data['dist_cost_temp'] = weight_dist * (1 - filtered_data['dist_score'])
   filtered_data["readcount_score"] = weight_rc * (filtered_data["readcount_score"])
-  filtered_data["congestion_score"] = weight_conavg * (filtered_data["congestion_score"])
-  filtered_data['congestion_score'] = weight_conavg * filtered_data['congestion_score']
+  filtered_data['congestion_score_temp'] = weight_conavg * filtered_data['congestion_score']
   filtered_data['senti_score'] = weight_sentiavg * filtered_data['senti_avg']
+  filtered_data['covid_score'] = weight_covid * (1 - filtered_data['corona_score']) 
   filtered_data['star_score'] = weight_starscore * filtered_data['star_score']
   
   if season == 'spring' :
@@ -93,9 +97,9 @@ def recommend(lat, lng, category, dist, congestion):
   except IndexError:
     return
 
-  result_data["rank"] = filtered_data["readcount_score"] + \
-                        filtered_data["congestion_score"] + filtered_data["senti_score"] + \
-                        filtered_data["star_score"] + filtered_data["season_score"]
+  result_data["rank"] = filtered_data['dist_cost_temp'] + filtered_data["readcount_score"] + \
+                        filtered_data["congestion_score_temp"] + filtered_data["senti_score"] + \
+                        filtered_data["star_score"] + filtered_data["season_score"] + filtered_data['covid_score']
 
   result_data["senti"] = filtered_data["senti_word"]
 
@@ -103,7 +107,6 @@ def recommend(lat, lng, category, dist, congestion):
   result_data["dist"] = round(result_data["dist"],2)
   result_data['star_avg'] = round(result_data["star_avg"],1)
 
-  print(result_data.sort_values(by=["rank"], ascending=False).head(20))
 
   result = result_data.sort_values(by=["rank"], ascending=False).head(50)
   result = result.reset_index(drop=True)
