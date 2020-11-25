@@ -70,6 +70,11 @@ def recommend(lat, lng, category, dist, congestion):
       season = 'winter'
     
   filtered_data['senti_avg'] = scaler.fit_transform(filtered_data[['senti_avg']])
+  
+  filtered_data['spring'] = scaler.fit_transform(filtered_data[['spring']])
+  filtered_data['summer'] = scaler.fit_transform(filtered_data[['summer']])
+  filtered_data['fall'] = scaler.fit_transform(filtered_data[['fall']])
+  filtered_data['winter'] = scaler.fit_transform(filtered_data[['winter']])
 
   # weight 계산
   filtered_data["readcount_score"] = weight_rc * (filtered_data["readcount_score"])
