@@ -77,6 +77,7 @@ def recommend(lat, lng, category, dist, congestion):
   filtered_data['congestion_score'] = weight_conavg * filtered_data['congestion_score']
   filtered_data['senti_score'] = weight_sentiavg * filtered_data['senti_avg']
   filtered_data['star_score'] = weight_starscore * filtered_data['star_score']
+  
   if season == 'spring' :
     filtered_data['season_score'] = weight_season * filtered_data['spring']
   elif season == 'summer' :

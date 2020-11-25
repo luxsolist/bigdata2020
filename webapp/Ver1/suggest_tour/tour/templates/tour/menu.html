@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-    <link rel="stylesheet" href="{% static 'third/style.css' %}">
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
@@ -19,28 +18,36 @@
     body {
       font-family: 'S-CoreDream-4Regular', Arial, Helvetica, sans-serif;
     }
+    #logo {
+      height: 130px;
+    }
+    .row {
+      margin: auto;
+    }
+    .links {
+      color: whitesmoke;
+    }
+    .listbtn {
+      border-right: 1px solid lightgrey;
+    }
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <a class="navbar-brand" href="/tour/">Tourlist</a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav mr-auto">
-          <li class="nav-item">
-            <a class="nav-link" href="/tour/">리스트</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">등록</a>
-          </li>
-        </ul>
-        <ul class="nav navbar-nav">
-          <li class="nav-item">
-            <a href="/" class="nav-link logout">Logout</a>
-          </li>
-        </ul>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="row logo">
+        <div class="col">
+          <a href='/tour/'>
+            <img src="/static/tour/images/logo_transparent.png" id='logo'>
+          </a>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col listbtn">
+          <a href="/tour/" class="links">LIST</a>
+        </div>
+        <div class="col btns">
+          <a href="/" class="logout links">LOGOUT</a>
+        </div>
       </div>
     </nav>
     {% block content %}

@@ -13,22 +13,29 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
 </head>
 <style>
+  @font-face {
+    font-family: 'S-CoreDream-4Regular';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-4Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+  }  
   body {
     font-family: 'S-CoreDream-4Regular', Arial, Helvetica, sans-serif;
+  }
+  #logo {
+    height: 200px;
+    filter: invert(1);
   }
 </style>
 <body class='main-bg'>
 
   <div class="login-container text-c animated FadeIn">
     <div>
-      <h1 class="logo-badge text-whitesmoke">
-        <span class="fa fa-user-circle"></span>
-      </h1>
+      <img id='logo' src="/static/main/assets/img/logo_transparent.png">
     </div>
 
     <div class='margin-t'>
-      <h1 class="text-whitesmoke">TOURLIST</h1>
-      <p class="text-whitesmoke">여행을 보다 편리하게</p>
+      <!-- <p class="text-whitesmoke expl">여행을 보다 편리하게</p> -->
       <br>
       <!-- <form action="submit" method="POST" class="margin-t"> -->
       {% csrf_token %}
