@@ -119,6 +119,7 @@ def tour_search(request):
         request.session['category'] = category
         request.session['dist'] = dist
         request.session['congestion'] = congestion
+        request.session["address"] = addr_info
     except AttributeError:
         content = {}
     except TypeError:
