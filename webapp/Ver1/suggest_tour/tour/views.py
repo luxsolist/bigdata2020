@@ -57,12 +57,14 @@ def tour_search(request):
     if request.POST:
         mapx =  float(request.POST.get('lat'))
         mapy =  float(request.POST.get('lng'))
+        addr_info = request.POST.get('addr_info')
         category = request.POST.get('category')
         dist = request.POST.get('dist')
         congestion = request.POST.get('congestion')
     else:
         mapx = request.session["gps_x"]
         mapy = request.session["gps_y"]
+        addr_info = request.session["address"]
         if request.session["category"]:
             category = request.session["category"]
 
@@ -74,6 +76,16 @@ def tour_search(request):
 
     df = recommend(mapx, mapy, category, dist, congestion)
     
+     # 검색결과출력리스트
+    search_category = {category == 'A' :'관광지',category=='B':'부대시설',category=='C':'숙박업소'}.get(True,'전체')
+    search_dist = {dist == 5:'5km 이내',dist==10:'10km 이내',dist==20:'20km 이내',dist==30:'30km 이내'}.get(True,'전체')
+    search_congestion = {congestion == 'A' :'쾌적',congestion=='B':'보통',congestion=='C':'혼잡'}.get(True,'전체')
+
+    search_info = {"search_category": search_category,
+                    "search_dist": search_dist,
+                    "search_congestion": search_congestion,
+                    "addr_info": addr_info}
+
     try:
         df_to_json = df.reset_index().to_json(orient='records')
         tourlist = list(json.loads(df_to_json))
@@ -100,7 +112,8 @@ def tour_search(request):
         page = request.GET.get('page') #파라미터로 넘어온 현재 페이지값
         paginator = Paginator(tourlist, 9) # 한페이지에 9개씩 표시
         items = paginator.get_page(page) # 해당페이지에 맞는 리스트로 필터링
-        content = {'tourlist':items }
+        content = {'tourlist':items,
+                    'search_info':search_info}
 
         request.session['gps_x'] = mapx
         request.session['gps_y'] = mapy

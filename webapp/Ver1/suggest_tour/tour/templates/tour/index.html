@@ -40,6 +40,14 @@
     #myBtn:hover {
         background-color: #555;
     }
+    .quickmenu { 
+        margin:10px;
+        position: fixed; 
+        right: 50%; top: 180px; 
+        margin-right: -720px; 
+        text-align:left; 
+        width: 150px; 
+    }
 </style>
 
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"><link rel="preconnect" href="https://fonts.gstatic.com">
@@ -155,7 +163,27 @@
             </ul>
         </div>
     </div>
+
+    <div class="quickmenu"> 
+        <div class="card md">
+            <div class="card-header" style="align-items: center;">
+                <h5>검색필터</h5>
+            </div>
+            <div class="card-body">
+                <ul>
+                </ul>
+                <p><b>타입</b> : {{search_info.search_category}}</p>
+                <p><b>거리</b> : {{search_info.search_dist}}</p>
+                <p><b>혼잡도</b> : {{search_info.search_congestion}}</p>
+                <p><b>주소</b> : {{search_info.addr_info}}</p>
+            </div>
+
+        </div>  
+    </div>
+
 </body>
+
+<!-- 위로가기버튼스크립트 -->
 <script>
     //Get the button
     var mybutton = document.getElementById("myBtn");
@@ -177,21 +205,23 @@
       document.documentElement.scrollTop = 0;
     }
 </script>
-    
+
+<!-- 클릭시 설명나오는 스크립트 -->
 <script>
     $(document).ready(function(){
       $('[data-toggle="popover"]').popover();
     });
 </script>
+
+<!-- 위도경도 얻어오는 스크립트 -->
 <script>
     var geocoder = new daum.maps.services.Geocoder();
     var lat,lng='';
-
+    var addr = '';
     function GetPostcode() {
         new daum.Postcode({
             oncomplete: function(data) {
-                var addr = data.address; // 최종 주소 변수
-
+                addr = data.address; // 최종 주소 변수
                 // 주소 정보를 해당 필드에 넣는다.
                 document.getElementById("address").value = addr;
                 // 주소로 상세 정보를 검색
@@ -200,8 +230,10 @@
                     if (status === daum.maps.services.Status.OK) {
 
                         var result = results[0]; //첫번째 결과의 값을 활용
+                        var addr_result = results[0]['road_address']
                         lng = result.x;
                         lat = result.y;
+                        addr_info = addr_result.address_name +" "+addr_result.building_name;
                     }
                 }); 
             }
@@ -215,9 +247,12 @@
         let form = $('.tour_search')
         let long = $('<input name="lng" type="hidden"></input>')
         let lati = $('<input name="lat" type="hidden"></input>')
+        let addr_input = $('<input name="addr_info" type="hidden"></input>')
+
         long.val(lng)
         lati.val(lat)
-        form.append(long, lati)
+        addr_input.val(addr_info)
+        form.append(long, lati,addr_input)
         $('.form-group').append(form)
         form.submit()
     }
