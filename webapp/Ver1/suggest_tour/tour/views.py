@@ -75,10 +75,9 @@ def tour_search(request):
             congestion = request.session["congestion"]
 
     df = recommend(mapx, mapy, category, dist, congestion)
-    
      # 검색결과출력리스트
     search_category = {category == 'A' :'관광지',category=='B':'부대시설',category=='C':'숙박업소'}.get(True,'전체')
-    search_dist = {dist == 5:'5km 이내',dist==10:'10km 이내',dist==20:'20km 이내',dist==30:'30km 이내'}.get(True,'전체')
+    search_dist = {dist == "5":'5km 이내',dist == "10":'10km 이내',dist=="20":'20km 이내',dist=="30":'30km 이내'}.get(True,'전체')
     search_congestion = {congestion == 'A' :'쾌적',congestion=='B':'보통',congestion=='C':'혼잡'}.get(True,'전체')
 
     search_info = {"search_category": search_category,

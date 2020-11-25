@@ -130,102 +130,7 @@
             </div>
         </div>
         <hr>
-        <!-- <div class="row desc_area">
-            <div class="col-md">
-                <div class="senti_word" id="senti_word">
-                </div>
-            </div>
-            <div class="col-md">
-                <div class="one-graph">
-                </div>
-            </div>
-            <div class="col-md">
-                <div class="map">
-                    <div id="map"></div>
-                </div>
-            </div>
-        </div> -->
-
     </div>
-
-
-    <!-- <div class="container pt-6">
-        <div class="row tourTitle">
-            <div class="col-md">
-                <h2>{{ tourData.title }}</h2>
-                <hr>
-                <p>{{ tourData.addr1 }}</p>
-            </div>
-            <div class="col-md-left" style="background-color:#f7f7f7">
-                <div id="chatLog" class="chat_log" readonly>
-                    <h5>날씨</h5>
-                    <img src="" id="img"></img>
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-4">
-                <div class="tour_picture">
-                    {% if tourData.firstimage %}
-                    <img class="thumbnails" src="{{tourData.firstimage}}" style="width:90%;">
-                    {% else %}
-                    <img class="thumbnails" src="/static/tour/images/image-not-found.jpg" style="width:90%;">
-                    {% endif %}
-                </div>
-            </div>
-
-
-            <div class="col-md-6">
-                <div class="row desc_area">
-                    <div class="col-md" style="background-color:#f7f7f7">
-                        <div class="corona">
-                            <h5>코로나 지수</h5>
-                        </div>
-                    </div>
-                    <div class="col-md" style="background-color:#f7f7f7">
-                        <div class="congestion">
-                            <h5>관광지 혼잡도</h5>
-                        </div>
-                    </div>
-                    <div class="col-md" style="background-color:#f7f7f7">
-                        <div class="star">
-                            <h5>평균 별점</h5>
-                        </div>
-                    </div>
-                </div>
-                <div class="row desc_area">
-                    <div class="col-md">
-                        <div class="overview" style="background-color:#f7f7f7">
-                            <h5>설명</h5>
-                            {{tourData.overview}}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row desc_area">
-            <div class="col-md-4">
-                <div class="senti_word" id="senti_word">
-                    <h5>감성사전</h5>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <h5>계절별 검색비율</h5>
-                <div class="one-graph">
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md">
-                <div class="map">
-                    <h5>지도</h5>
-                    <p>{{ tourData.addr1 }}</p>
-                    <div id="map"></div>
-                </div>
-            </div>
-        </div>
-    </div> -->
     
 </body>
 
@@ -271,7 +176,7 @@
 
         // 색설정
         var customColorScale = anychart.scales.ordinalColor();
-        customColorScale.colors(["#1E21A3","#FA2343","#606066"]);
+        customColorScale.colors(["#1E21A3","#FA2343","#D4D4D4"]);
 
         chart.colorRange(true);
         chart.colorScale(customColorScale);
