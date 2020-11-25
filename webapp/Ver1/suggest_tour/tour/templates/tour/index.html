@@ -123,10 +123,10 @@
                             <p class="card-text">{{item.overview}}</p>
                             <hr>
                             <div class = "card-text" >
-                                <button type="button" style="width:auto;height:30pt;" class="btn btn-outline-danger" title="코로나 위험지수" data-toggle="popover" data-trigger="focus" data-content="3단계중 {{item.corona_count}}단계입니다.">
+                                <button type="button" style="width:auto;height:30pt;" class="btn btn-outline-danger" title="코로나 위험지수" data-toggle="popover" data-trigger="focus" data-content="3단계중 {{item.corona_count}}단계입니다. (안전/보통/주의)">
                                     <img src="/static/tour/images/cough.png" alt="" style="width:30px;height:30px;"> {{item.corona_count}} 
                                 </button>
-                                <button type="button" style="width:auto;height:30pt;" class="btn btn-outline-info" title="교통 혼잡지수" data-toggle="popover" data-trigger="focus" data-content="3단계중 {{item.congestion_count}}단계입니다.">
+                                <button type="button" style="width:auto;height:30pt;" class="btn btn-outline-info" title="교통 혼잡지수" data-toggle="popover" data-trigger="focus" data-content="3단계중 {{item.congestion_count}}단계입니다. (쾌적/보통/혼잡)">
                                     <img src="/static/tour/images/car.png" alt="" style="width:30px;height:30px;"> {{item.congestion_count}}</button>
                                 <button type="button" style="width:auto;height:30pt;" class="btn btn-outline-warning" title="한줄평 평균별점" data-toggle="popover" data-trigger="focus" data-content="카카오맵 리뷰 별점 평균 {{item.star_avg}}입니다.">
                                     <img src="/static/tour/images/star.png" alt="" style="width:30px;height:27px;"> {{item.star_avg}}</button>
